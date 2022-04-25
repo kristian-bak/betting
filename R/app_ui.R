@@ -1,3 +1,4 @@
+library(shinydashboard)
 #' The application User-Interface
 #' 
 #' @param request Internal parameter for `{shiny}`. 
@@ -5,14 +6,35 @@
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
-  tagList(
-    # Leave this function for adding external resources
-    golem_add_external_resources(),
-    # Your application UI logic 
-    fluidPage(
-      h1("Betting")
+  
+  # Leave this function for adding external resources
+  golem_add_external_resources()
+  
+  shinydashboard::dashboardPage(
+    dashboardHeader(title = "Betting"),
+    dashboardSidebar(
+      
+      show_version_number(),
+      
+      sidebarMenu(
+        menuItem("Overblik", tabName = "dashboard", icon = icon("chart-line"))
+      )
+      
+    ),
+    
+    dashboardBody(
+      tabItems(
+        # First tab content
+        tabItem(tabName = "dashboard",
+                
+                mod_summary_ui("summary_ui_1")
+                
+        )
+      )
     )
+    
   )
+  
 }
 
 #' Add external Resources to the Application
