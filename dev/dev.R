@@ -17,6 +17,7 @@ usethis::use_version()
 ## Package dependency
 usethis::use_package("shiny")
 usethis::use_package("shinydashboard")
+usethis::use_package("readxl")
 
 ## Add NEWS
 usethis::use_news_md()

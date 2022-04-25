@@ -12,6 +12,7 @@ Imports:
     config (>= 0.3.1),
     golem (>= 0.3.1),
     magrittr,
+    readxl,
     shiny (>= 1.7.1),
     shinydashboard
 Encoding: UTF-8
