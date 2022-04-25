@@ -1,6 +1,6 @@
 # Betting 0.1.0
 
-* Adding empty module
+* Setting up empty dashboard
 
 # Betting 0.0.0.9000
 
