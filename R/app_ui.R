@@ -23,6 +23,7 @@ app_ui <- function(request) {
     ),
     
     dashboardBody(
+      
       tabItems(
         # First tab content
         tabItem(tabName = "dashboard",

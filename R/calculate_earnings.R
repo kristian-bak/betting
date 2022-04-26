@@ -1,15 +1,15 @@
 #' Calculate earnings
 #' @param data tibble with bets (see `read_data`)
-#' 
-calculate_earnings <- function(data) {
+#' @param order_by order by variable name (tidy approach)
+calculate_earnings <- function(data, order_by) {
   
   data %>% 
     dplyr::summarise(Bets = dplyr::n(),
-                     Stake = sum(Indsats, na.rm = TRUE),
-                     Revenue = sum(Gevinst, na.rm = TRUE), 
-                     Earnings = Revenue - Stake, 
-                     Return = round(100 * (Earnings / Stake), 2)) %>% 
-    dplyr::arrange(dplyr::desc(Bets))
+                     Stake = round(sum(Indsats, na.rm = TRUE), 0),
+                     Revenue = round(sum(Gevinst, na.rm = TRUE), 0), 
+                     Earnings = round(Revenue - Stake, 0), 
+                     Return = round(100 * (Earnings / Stake), 1)) %>% 
+    dplyr::arrange(dplyr::desc({{order_by}}))
   
 }
 

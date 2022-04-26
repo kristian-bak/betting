@@ -4,10 +4,12 @@
 \alias{calculate_earnings}
 \title{Calculate earnings}
 \usage{
-calculate_earnings(data)
+calculate_earnings(data, order_by)
 }
 \arguments{
 \item{data}{tibble with bets (see `read_data`)}
+
+\item{order_by}{order by variable name (tidy approach)}
 }
 \description{
 Calculate earnings

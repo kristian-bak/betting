@@ -19,6 +19,8 @@ usethis::use_package("shiny")
 usethis::use_package("shinydashboard")
 usethis::use_package("readxl")
 
+remotes::install_github("kristian-bak/kb.utils")
+
 ## Add NEWS
 usethis::use_news_md()
 
