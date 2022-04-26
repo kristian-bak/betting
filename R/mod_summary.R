@@ -41,7 +41,25 @@ mod_summary_ui <- function(id){
           outputId = ns("table_odds_group")
         )
       )
+    ),
+    
+    fluidRow(
+      column(2, 
+             selectInput(
+               inputId = ns("select_yaxis"), 
+               label = "Y axis", 
+               choices = c("Bets", "Stake", "Revenue", "Earnings", "Return"), 
+               selected = "Earnings"
+             )
+      )
+    ),
+    
+    fluidRow(
+      
+      plotly::plotlyOutput(outputId = ns("plot_earnings"))
+      
     )
+    
   )
 }
     
@@ -57,7 +75,8 @@ mod_summary_server <- function(id){
     ## Info boxes
     
     df_info <- data %>% 
-      calculate_earnings(order_by = Bets)
+      calculate_earnings() %>% 
+      dplyr::arrange(dplyr::desc(Bets))
     
     output$info_bets <- renderInfoBox({
       infoBox(
@@ -97,7 +116,8 @@ mod_summary_server <- function(id){
     
     df_game_type <- data %>% 
       dplyr::group_by(Spiltype) %>% 
-      calculate_earnings(order_by = Bets)
+      calculate_earnings() %>% 
+      dplyr::arrange(dplyr::desc(Bets))
     
     output$table_game_type <- DT::renderDataTable({
       DT::datatable(df_game_type)
@@ -105,7 +125,8 @@ mod_summary_server <- function(id){
     
     df_tournament <- data %>% 
       dplyr::group_by(Turnering) %>% 
-      calculate_earnings(order_by = Bets)
+      calculate_earnings() %>% 
+      dplyr::arrange(dplyr::desc(Bets))
     
     output$table_tournament <- DT::renderDataTable({
       DT::datatable(df_tournament)
@@ -113,7 +134,8 @@ mod_summary_server <- function(id){
     
     df_game <- data %>% 
       dplyr::group_by(Spil) %>% 
-      calculate_earnings(order_by = Bets)
+      calculate_earnings() %>% 
+      dplyr::arrange(dplyr::desc(Bets))
     
     output$table_game <- DT::renderDataTable({
       DT::datatable(df_game)
@@ -131,7 +153,7 @@ mod_summary_server <- function(id){
         OddsGroup = cut(Odds, breaks = breaks)
       ) %>% 
       dplyr::group_by(OddsGroup) %>% 
-      calculate_earnings(order_by = OddsGroup) %>% 
+      calculate_earnings() %>% 
       dplyr::arrange(OddsGroup)
     
     output$table_odds_group <- DT::renderDataTable({
@@ -141,13 +163,17 @@ mod_summary_server <- function(id){
     ## End of tables with earnings
         
     # Plot
-    
-    data %>% 
+    plot_data <- data %>% 
       dplyr::group_by(Købsdato) %>% 
-      calculate_earnings(order_by = Bets) %>% 
-      accumulate_earnings() %>% 
-      plot_earnings(y = "Earnings")
+      calculate_earnings() %>% 
+      accumulate_earnings()
     
+    output$plot_earnings <- plotly::renderPlotly({
+      
+      plot_data %>% 
+        plot_earnings(y = input$select_yaxis)
+      
+    })
  
   })
 }

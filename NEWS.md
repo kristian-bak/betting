@@ -1,3 +1,7 @@
+# Betting 0.2.0
+
+* Adding several UI elements
+
 # Betting 0.1.0
 
 * Setting up empty dashboard
