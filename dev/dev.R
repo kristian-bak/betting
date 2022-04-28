@@ -18,6 +18,8 @@ usethis::use_version()
 usethis::use_package("shiny")
 usethis::use_package("shinydashboard")
 usethis::use_package("readxl")
+usethis::use_package("DT")
+usethis::use_package("plotly")
 
 remotes::install_github("kristian-bak/kb.utils")
 

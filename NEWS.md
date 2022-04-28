@@ -1,3 +1,7 @@
+# Betting 0.3.0
+
+* Adding filter options on historical bets (time period and team selection)
+
 # Betting 0.2.0
 
 * Adding several UI elements

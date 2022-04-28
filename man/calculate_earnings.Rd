@@ -4,7 +4,13 @@
 \alias{calculate_earnings}
 \title{Calculate earnings}
 \usage{
-calculate_earnings(data, order_by = NULL)
+calculate_earnings(
+  data,
+  var_bets = NULL,
+  var_stake = "Indsats",
+  var_revenue = "Gevinst",
+  order_by = NULL
+)
 }
 \arguments{
 \item{data}{tibble with bets (see `read_data`)}

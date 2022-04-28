@@ -1,11 +1,11 @@
 #' Calculate earnings
 #' @param data tibble with bets (see `read_data`)
-calculate_earnings <- function(data, order_by = NULL) {
+calculate_earnings <- function(data, var_bets = NULL, var_stake = "Indsats", var_revenue = "Gevinst", order_by = NULL) {
   
   data %>% 
-    dplyr::summarise(Bets = dplyr::n(),
-                     Stake = round(sum(Indsats, na.rm = TRUE), 0),
-                     Revenue = round(sum(Gevinst, na.rm = TRUE), 0), 
+    dplyr::summarise(Bets = if (is.null(var_bets)) dplyr::n() else sum(get(var_bets)),
+                     Stake = round(sum(get(var_stake), na.rm = TRUE), 0),
+                     Revenue = round(sum(get(var_revenue), na.rm = TRUE), 0), 
                      Earnings = round(Revenue - Stake, 0), 
                      Return = round(100 * (Earnings / Stake), 1))
 }
