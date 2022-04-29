@@ -1,3 +1,7 @@
+# Betting 0.4.0
+
+* Adding more filter options
+
 # Betting 0.3.0
 
 * Adding filter options on historical bets (time period and team selection)

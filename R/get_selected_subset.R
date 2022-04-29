@@ -6,6 +6,6 @@ get_selected_subset <- function(data, ...) {
   
   data %>% 
     dplyr::filter(...) %>% 
-    dplyr::select(-Købsdato, -HomeTeam, -AwayTeam)
+    dplyr::select(-Købsdato, -HomeTeam, -AwayTeam, -OddsGroup, -OddsMod)
   
 }

@@ -1,4 +1,5 @@
 library(shinydashboard)
+library(shinyBS)
 #' The application User-Interface
 #' 
 #' @param request Internal parameter for `{shiny}`. 
@@ -17,7 +18,7 @@ app_ui <- function(request) {
       show_version_number(),
       
       sidebarMenu(
-        menuItem("Overblik", tabName = "dashboard", icon = icon("chart-line"))
+        menuItem("Overview", tabName = "dashboard", icon = icon("chart-line"))
       )
       
     ),

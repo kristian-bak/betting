@@ -29,6 +29,76 @@ mod_summary_ui <- function(id){
           label = "Team", 
           choices = NULL
         )
+      ), 
+      column(2,
+        selectizeInput(
+          inputId = ns("select_tournament"), 
+          label = "Tournament", 
+          choices = NULL
+        )
+      )
+    ),
+    
+    fluidRow(
+      actionButton(
+        inputId = ns("go_last_month"), 
+        label = "Last month", 
+        style = 'padding:4px; font-size:89%; margin-left: 12px'
+      ),
+      actionButton(
+        inputId = ns("go_last_3_months"), 
+        label = "Last 3 months", 
+        style = 'padding:4px; font-size:89%'
+      ),
+      actionButton(
+        inputId = ns("go_this_year"), 
+        label = get_this_year(), 
+        style = 'padding:4px; font-size:89%'
+      ),
+      actionButton(
+        inputId = ns("go_all_time"), 
+        label = "All time", 
+        style = 'padding:4px; font-size:89%'
+      )
+    ),
+    
+    fluidRow(
+      column(3, 
+        sliderInput(
+          inputId = ns("slide_stake"), 
+          label = "Stake", 
+          min = 0, 
+          max = 500, 
+          value = c(0, 500), 
+          step = 5, 
+          dragRange = TRUE
+        )
+      ),
+      column(3, 
+        selectizeInput(
+          inputId = ns("select_game_type"), 
+          label = "Bet type", 
+          choices = NULL
+        )
+      ),
+      column(2, 
+        selectizeInput(
+          inputId = ns("select_game"), 
+          label = "Live betting vs oddset", 
+          choices = c("", "Live Betting", "Oddset")
+        )
+      ),
+      column(1, 
+        actionButton(
+          inputId = ns("go_clear_filters"), 
+          label = NULL, 
+          icon = icon("times-circle"), 
+          style = "margin-top: 24px"
+        ),
+        shinyBS::bsTooltip(
+          id = ns("go_clear_filters"), 
+          title = "Reset all filters"
+        )
       )
     ),
     
@@ -98,27 +168,112 @@ mod_summary_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
-    data_full <- read_data() %>% 
-      dplyr::mutate(HomeTeam = map_game_to_home_team(Kamp), 
-                    AwayTeam = map_game_to_away_team(Kamp), 
-                    Købsdato = as.Date(Købsdato),
-                    Kampdato = as.Date(Kampdato))
+    breaks <- c(
+      seq(from = 1, to = 2, by = 0.25), 
+      seq(from = 2.5, to = 15, by = 2)
+    )
     
-    observe({
+    data_full <- read_data() %>% 
+      dplyr::mutate(HomeTeam  = map_game_to_home_team(Kamp), 
+                    AwayTeam  = map_game_to_away_team(Kamp), 
+                    OddsMod   = dplyr::if_else(Odds > 5, 5, Odds),
+                    OddsGroup = cut(OddsMod, breaks = breaks) %>% as.character(),
+                    Købsdato  = as.Date(Købsdato),
+                    Kampdato  = as.Date(Kampdato))
+    
+    if (max(data_full$Indsats, na.rm = TRUE) > 500) {
+      warning("sliderinput named slide_stake has max hardcoded as 500. Change this to a update statement")
+    }
+    
+    observeEvent(input$go_this_year, {
       
-      if (exists("data_full")) {
-        updateSelectizeInput(
-          session = session, 
-          inputId = "select_team", 
-          choices = c("", get_team_names(data = data_full))
-        )
-      }
+      updateDateRangeInput(
+        session = session, 
+        inputId = "click_date", 
+        start = start_of_this_year(), 
+        end = Sys.Date()
+      )
+      
+    })
+    
+    observeEvent(input$go_all_time, {
+      
+      updateDateRangeInput(
+        session = session, 
+        inputId = "click_date", 
+        start = min(data_full$Købsdato), 
+        end = Sys.Date()
+      )
+      
+    })
+    
+    observeEvent(input$go_last_month, {
+      
+      updateDateRangeInput(
+        session = session, 
+        inputId = "click_date", 
+        start = one_month_ago(), 
+        end = Sys.Date()
+      )
+      
+    })
+    
+    observeEvent(input$go_last_3_months, {
+      
+      updateDateRangeInput(
+        session = session, 
+        inputId = "click_date", 
+        start = three_months_ago(), 
+        end = Sys.Date()
+      )
+      
+    })
+    
+    observeEvent(input$go_clear_filters, {
+      
+      updateDateRangeInput(
+        session = session, 
+        inputId = "click_date", 
+        start = start_of_this_year(), 
+        end = Sys.Date()
+      )
+      
+      updateSelectizeInput(
+        session = session, 
+        inputId = "select_team", 
+        selected = ""
+      )
+      
+      updateSelectizeInput(
+        session = session, 
+        inputId = "select_tournament", 
+        selected = ""
+      )
+      
+      updateSelectizeInput(
+        session = session, 
+        inputId = "select_game_type", 
+        selected = ""
+      )
+      
+      updateSelectizeInput(
+        session = session, 
+        inputId = "select_game", 
+        selected = ""
+      )
+      
+      updateSliderInput(
+        session = session, 
+        inputId = "slide_stake", 
+        value = c(0, 500)
+      )
       
     })
     
     data <- reactive({
       data_tmp <- data_full %>% 
-        dplyr::filter(Kampdato >= input$click_date[1], Kampdato <= input$click_date[2])
+        dplyr::filter(Kampdato >= input$click_date[1], Kampdato <= input$click_date[2]) %>% 
+        dplyr::filter(Indsats >= input$slide_stake[1], Indsats <= input$slide_stake[2])
       
       if (input$select_team != "") {
         
@@ -127,7 +282,84 @@ mod_summary_server <- function(id){
   
       }
       
+      if (input$select_game != "") {
+        
+        data_tmp <- data_tmp %>% 
+          dplyr::filter(Spil == input$select_game)
+        
+      }
+      
+      if (input$select_tournament != "") {
+        
+        data_tmp <- data_tmp %>% 
+          dplyr::filter(Turnering == input$select_tournament)
+        
+      }
+      
+      if (input$select_game_type != "") {
+        
+        data_tmp <- data_tmp %>% 
+          dplyr::filter(Spiltype == input$select_game_type)
+        
+      }
+      
       return(data_tmp)
+      
+    })
+    
+    observe({
+      
+      if (input$select_team != "") {
+        return()
+      }
+      
+      updateSelectizeInput(
+        session = session, 
+        inputId = "select_team", 
+        choices = c("", get_team_names(data = data()))
+      )
+      
+    })
+    
+    observe({
+      
+      if (input$select_game_type != "") {
+        return()
+      }
+      
+      updateSelectizeInput(
+        session = session, 
+        inputId = "select_game_type", 
+        choices = c("", get_game_types(data = data()))
+      )
+      
+    })
+    
+    observe({
+      
+      if (input$select_tournament != "") {
+        return()
+      }
+      
+      updateSelectizeInput(
+        session = session, 
+        inputId = "select_tournament", 
+        choices = c("", get_tournament_names(data = data()))
+      )
+      
+    })
+    
+    observe({
+      
+      if (input$select_game != "") {
+        return()
+      }
+      
+      updateSelectizeInput(
+        session = session, 
+        inputId = "select_game", 
+        choices = c("", get_games(data = data()))
+      )
       
     })
     
@@ -167,7 +399,7 @@ mod_summary_server <- function(id){
       infoBox(
         title = "Return", 
         value = df_info()$Return %>% add_pct(),
-        icon = if (df_info()$Return >= 0) icon("arrow-up") else icon("arrow-down")
+        icon = get_icon_for_info_return(x = df_info()$Return)
       )
     })
     
@@ -240,19 +472,9 @@ mod_summary_server <- function(id){
     output$table_game <- DT::renderDataTable({
       DT::datatable(df_game(), selection = "single")
     })
-  
-    
-    breaks <- c(
-      seq(from = 1, to = 2, by = 0.25), 
-      seq(from = 2.5, to = 15, by = 2)
-    )
     
     df_odds_group <- reactive({
       data() %>% 
-        dplyr::mutate(
-          Odds = dplyr::if_else(Odds > 5, 5, Odds),
-          OddsGroup = cut(Odds, breaks = breaks)
-        ) %>% 
         dplyr::group_by(OddsGroup) %>% 
         calculate_earnings() %>% 
         dplyr::arrange(OddsGroup)
@@ -285,6 +507,7 @@ mod_summary_server <- function(id){
       }
     })
     
+    ## Show subset for game type - start
     react_game_type <- reactive({
       
       df_game_type() %>% 
@@ -309,6 +532,127 @@ mod_summary_server <- function(id){
       )
       
     })
+    
+    ## Show subset for game type - end
+    
+    ## Show subset for tournament - start
+    react_tournament <- reactive({
+      
+      df_tournament() %>% 
+        dplyr::slice(input$table_tournament_rows_selected) %>% 
+        dplyr::pull(Turnering)
+      
+    })
+    
+    output$table_tournament_subset <- DT::renderDataTable(
+      DT::datatable(get_selected_subset(data = data(), Turnering == react_tournament()))
+    )
+    
+    observeEvent(input$table_tournament_rows_selected, {
+      
+      showModal(
+        ui = modalDialog(
+          DT::dataTableOutput(outputId = ns("table_tournament_subset")), 
+          size = "l", 
+          easyClose = TRUE
+        ), 
+        session = session
+      )
+      
+    })
+    
+    ## Show subset for tournament - end
+    
+    ## Show subset for team - start
+    react_team <- reactive({
+      
+      df_team_combined() %>% 
+        dplyr::slice(input$table_team_rows_selected) %>% 
+        dplyr::pull(Team)
+      
+    })
+    
+    output$table_team_subset <- DT::renderDataTable(
+      DT::datatable(
+        get_selected_subset(
+          data = data(), 
+          HomeTeam == react_team() | AwayTeam == react_team()
+        )
+      )
+    )
+    
+    observeEvent(input$table_team_rows_selected, {
+      
+      showModal(
+        ui = modalDialog(
+          DT::dataTableOutput(outputId = ns("table_team_subset")), 
+          size = "l", 
+          easyClose = TRUE
+        ), 
+        session = session
+      )
+      
+    })
+    
+    ## Show subset for team - end
+    
+    ## Show subset for live betting vs oddset - start
+    react_game <- reactive({
+      
+      df_game() %>% 
+        dplyr::slice(input$table_game_rows_selected) %>% 
+        dplyr::pull(Spil)
+      
+    })
+    
+    output$table_game_subset <- DT::renderDataTable(
+      DT::datatable(get_selected_subset(data = data(), Spil == react_game()))
+    )
+    
+    observeEvent(input$table_game_rows_selected, {
+      
+      showModal(
+        ui = modalDialog(
+          DT::dataTableOutput(outputId = ns("table_game_subset")), 
+          size = "l", 
+          easyClose = TRUE
+        ), 
+        session = session
+      )
+      
+    })
+    
+    ## Show subset for live betting vs oddset - end
+    
+    ## Show subset for odds range - start
+    react_odds_group <- reactive({
+      
+      df_odds_group() %>% 
+        dplyr::slice(input$table_odds_group_rows_selected) %>% 
+        dplyr::pull(OddsGroup)
+      
+    })
+    
+    output$table_odds_group_subset <- DT::renderDataTable({
+      
+      DT::datatable(get_selected_subset(data = data(), OddsGroup == react_odds_group()))
+      
+    })
+    
+    observeEvent(input$table_odds_group_rows_selected, {
+      
+      showModal(
+        ui = modalDialog(
+          DT::dataTableOutput(outputId = ns("table_odds_group_subset")), 
+          size = "l", 
+          easyClose = TRUE
+        ), 
+        session = session
+      )
+      
+    })
+    
+    ## Show subset for odds range - end
  
   })
 }
