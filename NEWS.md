@@ -1,3 +1,7 @@
+# Betting 1.0.1
+
+* Adding app.R in order to deploy the app to shinyapps.io
+
 # Betting 1.0.0
 
 * Translating columns in data from danish to English

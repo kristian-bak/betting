@@ -14,8 +14,17 @@ renv::status()
 ## Run tests
 devtools::test()
 
+## Add test
+usethis::use_test("calculate_earnings")
+
+## Check everything
+devtools::check()
+
 ## Bump version number
 usethis::use_version()
+
+## Deploy
+rsconnect::deployApp()
 
 ## Package dependency
 usethis::use_package("dplyr")
@@ -29,12 +38,6 @@ usethis::use_package("plotly")
 usethis::use_package("kb.utils")
 
 remotes::install_github("kristian-bak/kb.utils")
-
-## Add test
-usethis::use_test("calculate_earnings")
-
-## Check everything
-devtools::check()
 
 ## Add NEWS
 usethis::use_news_md()
