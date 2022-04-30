@@ -1,6 +1,6 @@
 Package: Betting
 Title: An Amazing Shiny App
-Version: 0.4.0
+Version: 1.0.0
 Authors@R: 
     person(given = "firstname",
            family = "lastname",
@@ -10,13 +10,20 @@ Description: What the package does (one paragraph).
 License: What license is it under?
 Imports: 
     config (>= 0.3.1),
+    dplyr,
     DT,
     golem (>= 0.3.1),
+    kb.utils,
     magrittr,
     plotly,
     readxl,
     shiny (>= 1.7.1),
-    shinydashboard
+    shinyBS,
+    shinydashboard,
+    shinyjs
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

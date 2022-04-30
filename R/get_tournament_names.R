@@ -4,7 +4,7 @@
 get_tournament_names <- function(data) {
   
   data %>% 
-    dplyr::pull(Turnering) %>% 
+    dplyr::pull(Tournament) %>% 
     unique() %>% 
     sort()
   

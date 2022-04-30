@@ -4,7 +4,7 @@
 get_games <- function(data) {
   
   data %>% 
-    dplyr::pull(Spil) %>% 
+    dplyr::pull(Game) %>% 
     unique() %>% 
     sort()
   

@@ -1,3 +1,9 @@
+# Betting 1.0.0
+
+* Translating columns in data from danish to English
+* Creating unit test for `calculate_earnings`
+* Adding info circle to stake selectizeInput
+
 # Betting 0.4.0
 
 * Adding more filter options

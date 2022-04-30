@@ -7,8 +7,8 @@
 calculate_earnings(
   data,
   var_bets = NULL,
-  var_stake = "Indsats",
-  var_revenue = "Gevinst",
+  var_stake = "Stake",
+  var_revenue = "Revenue",
   order_by = NULL
 )
 }

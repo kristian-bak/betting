@@ -1,6 +1,6 @@
 #' Read data
 #' 
 read_data <- function() {
-  readxl::read_excel("data/Betting.xlsx")
+  readxl::read_excel("inst/data/Betting.xlsx")
 }
 

@@ -4,7 +4,7 @@
 get_game_types <- function(data) {
   
   data %>% 
-    dplyr::pull(Spiltype) %>% 
+    dplyr::pull(GameType) %>% 
     unique() %>% 
     sort()
   

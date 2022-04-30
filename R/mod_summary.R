@@ -66,7 +66,11 @@ mod_summary_ui <- function(id){
       column(3, 
         sliderInput(
           inputId = ns("slide_stake"), 
-          label = "Stake", 
+          label = add_info_circle(
+            label = "Stake", 
+            placement = "right", 
+            content = "Money in DKK placed on a bet"
+          ), 
           min = 0, 
           max = 500, 
           value = c(0, 500), 
@@ -174,14 +178,14 @@ mod_summary_server <- function(id){
     )
     
     data_full <- read_data() %>% 
-      dplyr::mutate(HomeTeam  = map_game_to_home_team(Kamp), 
-                    AwayTeam  = map_game_to_away_team(Kamp), 
+      dplyr::mutate(HomeTeam  = map_game_to_home_team(Match), 
+                    AwayTeam  = map_game_to_away_team(Match), 
                     OddsMod   = dplyr::if_else(Odds > 5, 5, Odds),
                     OddsGroup = cut(OddsMod, breaks = breaks) %>% as.character(),
-                    Købsdato  = as.Date(Købsdato),
-                    Kampdato  = as.Date(Kampdato))
+                    BetDay    = as.Date(BetDay),
+                    MatchDay  = as.Date(MatchDay))
     
-    if (max(data_full$Indsats, na.rm = TRUE) > 500) {
+    if (max(data_full$Stake, na.rm = TRUE) > 500) {
       warning("sliderinput named slide_stake has max hardcoded as 500. Change this to a update statement")
     }
     
@@ -201,7 +205,7 @@ mod_summary_server <- function(id){
       updateDateRangeInput(
         session = session, 
         inputId = "click_date", 
-        start = min(data_full$Købsdato), 
+        start = min(data_full$BetDay), 
         end = Sys.Date()
       )
       
@@ -272,8 +276,8 @@ mod_summary_server <- function(id){
     
     data <- reactive({
       data_tmp <- data_full %>% 
-        dplyr::filter(Kampdato >= input$click_date[1], Kampdato <= input$click_date[2]) %>% 
-        dplyr::filter(Indsats >= input$slide_stake[1], Indsats <= input$slide_stake[2])
+        dplyr::filter(MatchDay >= input$click_date[1], MatchDay <= input$click_date[2]) %>% 
+        dplyr::filter(Stake >= input$slide_stake[1], Stake <= input$slide_stake[2])
       
       if (input$select_team != "") {
         
@@ -285,21 +289,21 @@ mod_summary_server <- function(id){
       if (input$select_game != "") {
         
         data_tmp <- data_tmp %>% 
-          dplyr::filter(Spil == input$select_game)
+          dplyr::filter(Game == input$select_game)
         
       }
       
       if (input$select_tournament != "") {
         
         data_tmp <- data_tmp %>% 
-          dplyr::filter(Turnering == input$select_tournament)
+          dplyr::filter(Tournament == input$select_tournament)
         
       }
       
       if (input$select_game_type != "") {
         
         data_tmp <- data_tmp %>% 
-          dplyr::filter(Spiltype == input$select_game_type)
+          dplyr::filter(GameType == input$select_game_type)
         
       }
       
@@ -409,7 +413,7 @@ mod_summary_server <- function(id){
     
     df_game_type <- reactive({
       data() %>% 
-        dplyr::group_by(Spiltype) %>% 
+        dplyr::group_by(GameType) %>% 
         calculate_earnings() %>% 
         dplyr::arrange(dplyr::desc(Bets))
     })
@@ -420,7 +424,7 @@ mod_summary_server <- function(id){
     
     df_tournament <- reactive({
       data() %>% 
-        dplyr::group_by(Turnering) %>% 
+        dplyr::group_by(Tournament) %>% 
         calculate_earnings() %>% 
         dplyr::arrange(dplyr::desc(Bets))
     })
@@ -464,7 +468,7 @@ mod_summary_server <- function(id){
     
     df_game <- reactive({
       data() %>% 
-        dplyr::group_by(Spil) %>% 
+        dplyr::group_by(Game) %>% 
         calculate_earnings() %>% 
         dplyr::arrange(dplyr::desc(Bets))
     })
@@ -489,7 +493,7 @@ mod_summary_server <- function(id){
     # Plot
     plot_data <- reactive({
       data() %>% 
-        dplyr::group_by(Købsdato) %>% 
+        dplyr::group_by(BetDay) %>% 
         calculate_earnings() %>% 
         accumulate_earnings()
     })
@@ -512,12 +516,12 @@ mod_summary_server <- function(id){
       
       df_game_type() %>% 
         dplyr::slice(input$table_game_type_rows_selected) %>% 
-        dplyr::pull(Spiltype)
+        dplyr::pull(GameType)
       
     })
     
     output$table_game_type_subset <- DT::renderDataTable(
-      DT::datatable(get_selected_subset(data = data(), Spiltype == react_game_type()))
+      DT::datatable(get_selected_subset(data = data(), GameType == react_game_type()))
     )
     
     observeEvent(input$table_game_type_rows_selected, {
@@ -540,12 +544,12 @@ mod_summary_server <- function(id){
       
       df_tournament() %>% 
         dplyr::slice(input$table_tournament_rows_selected) %>% 
-        dplyr::pull(Turnering)
+        dplyr::pull(Tournament)
       
     })
     
     output$table_tournament_subset <- DT::renderDataTable(
-      DT::datatable(get_selected_subset(data = data(), Turnering == react_tournament()))
+      DT::datatable(get_selected_subset(data = data(), Tournament == react_tournament()))
     )
     
     observeEvent(input$table_tournament_rows_selected, {
@@ -601,12 +605,12 @@ mod_summary_server <- function(id){
       
       df_game() %>% 
         dplyr::slice(input$table_game_rows_selected) %>% 
-        dplyr::pull(Spil)
+        dplyr::pull(Game)
       
     })
     
     output$table_game_subset <- DT::renderDataTable(
-      DT::datatable(get_selected_subset(data = data(), Spil == react_game()))
+      DT::datatable(get_selected_subset(data = data(), Game == react_game()))
     )
     
     observeEvent(input$table_game_rows_selected, {

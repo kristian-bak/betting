@@ -3,8 +3,8 @@
 accumulate_earnings <- function(data) {
   
   data %>% 
-    dplyr::arrange(Købsdato) %>% 
-    dplyr::summarise(Time = unique(Købsdato), 
+    dplyr::arrange(BetDay) %>% 
+    dplyr::summarise(Time = unique(BetDay), 
                      Bets = cumsum(Bets), 
                      Stake = cumsum(Stake), 
                      Revenue = cumsum(Revenue), 
