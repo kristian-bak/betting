@@ -36,7 +36,7 @@ usethis::use_package("readxl")
 usethis::use_package("DT")
 usethis::use_package("plotly")
 usethis::use_package("kb.utils")
-
+usethis::use_package("htmltools")
 remotes::install_github("kristian-bak/kb.utils")
 
 ## Add NEWS

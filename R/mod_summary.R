@@ -137,6 +137,10 @@ mod_summary_ui <- function(id){
         show_earning_panel(
           title = "Odds ranges", 
           outputId = ns("table_odds_group")
+        ),
+        show_earning_panel(
+          title = "Bets per match", 
+          outputId = ns("table_bets")
         )
       )
     ),
@@ -184,6 +188,14 @@ mod_summary_server <- function(id){
                     OddsGroup = cut(OddsMod, breaks = breaks) %>% as.character(),
                     BetDay    = as.Date(BetDay),
                     MatchDay  = as.Date(MatchDay))
+    
+    df_count_bets <- data_full %>% 
+      dplyr::mutate(ExposureBets = dplyr::if_else(is.na(Revenue) | is.na(Match), 0, 1)) %>% 
+      dplyr::group_by(MatchDay, Match) %>% 
+      dplyr::summarise(Bets = sum(ExposureBets), .groups = "drop")
+    
+    data_full <- data_full %>% 
+      dplyr::left_join(df_count_bets, by = c("MatchDay", "Match"))
     
     if (max(data_full$Stake, na.rm = TRUE) > 500) {
       warning("sliderinput named slide_stake has max hardcoded as 500. Change this to a update statement")
@@ -488,6 +500,22 @@ mod_summary_server <- function(id){
       DT::datatable(df_odds_group(), selection = "single")
     })
     
+    df_bets <- reactive({
+      read_data() %>% 
+        dplyr::group_by(MatchDay, Match) %>% 
+        calculate_earnings() %>% 
+        dplyr::mutate(BetsInGame = Bets) %>% 
+        dplyr::filter(BetsInGame > 0) %>% 
+        dplyr::group_by(BetsInGame) %>% 
+        calculate_earnings() %>% 
+        dplyr::select(-Bets) %>% 
+        dplyr::rename(Bets = BetsInGame)
+    })
+    
+    output$table_bets <- DT::renderDataTable({
+      DT::datatable(df_bets(), selection = "single")
+    })
+    
     ## End of tables with earnings
         
     # Plot
@@ -657,6 +685,36 @@ mod_summary_server <- function(id){
     })
     
     ## Show subset for odds range - end
+    
+    ## Show subset for bets per match - start
+    react_bets <- reactive({
+      
+      df_bets() %>% 
+        dplyr::slice(input$table_bets_rows_selected) %>% 
+        dplyr::pull(Bets)
+      
+    })
+    
+    output$table_bets_subset <- DT::renderDataTable({
+      
+      DT::datatable(get_selected_subset(data = data(), Bets == react_bets()))
+      
+    })
+    
+    observeEvent(input$table_bets_rows_selected, {
+      
+      showModal(
+        ui = modalDialog(
+          DT::dataTableOutput(outputId = ns("table_bets_subset")), 
+          size = "l", 
+          easyClose = TRUE
+        ), 
+        session = session
+      )
+      
+    })
+    
+    ## Show subset for bets per match - end
  
   })
 }

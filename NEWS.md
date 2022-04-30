@@ -1,3 +1,7 @@
+# Betting 1.1.0
+
+* Adding tab related to number of bets per game
+
 # Betting 1.0.1
 
 * Adding app.R in order to deploy the app to shinyapps.io
