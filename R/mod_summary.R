@@ -167,6 +167,31 @@ mod_summary_ui <- function(id){
       
       plotly::plotlyOutput(outputId = ns("plot_earnings"))
       
+    ),
+    
+    fluidRow(
+      shinyjs::hidden(
+        tagList(
+          selectInput(
+            inputId = ns("select_covariate"), 
+            label = "Covariate", 
+            choices = c("Game", "GameType", "Odds", "Revenue", "Stake", "Tournament"),
+            width = "16.66667%"
+          )
+        )
+      )
+    ),
+    
+    fluidRow(
+      
+      verbatimTextOutput(outputId = ns("show_summary"))
+      
+    ),
+    
+    fluidRow(
+      
+      plotly::plotlyOutput(outputId = ns("plot_distribution"))
+      
     )
     
   )
@@ -529,6 +554,7 @@ mod_summary_server <- function(id){
     observe({
       if (exists("plot_data")) {
         shinyjs::show(id = "select_yaxis")
+        shinyjs::show(id = "select_covariate")
       }
     })
     
@@ -708,6 +734,33 @@ mod_summary_server <- function(id){
     })
     
     ## Show subset for bets per match - end
+    
+    output$plot_distribution <- plotly::renderPlotly({
+      
+      data() %>% 
+        plot_distribution(var = input$select_covariate)
+      
+    })
+    
+    output$show_summary <- renderPrint({
+      data() %>% 
+        dplyr::pull(input$select_covariate) %>% 
+        summarise_distribution()
+    })
+    
+    observe({
+      
+      hide_distribution <- data() %>% 
+        dplyr::pull(input$select_covariate) %>% 
+        is.character()
+      
+      if (hide_distribution) {
+        shinyjs::hide(id = "show_summary")
+      } else {
+        shinyjs::show(id = "show_summary")
+      }
+      
+    })
  
   })
 }
