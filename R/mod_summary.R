@@ -12,6 +12,8 @@ mod_summary_ui <- function(id){
   
   fluidPage(
     
+    tags$style("@import url(https://use.fontawesome.com/releases/v5.7.2/css/all.css);"),
+    
     fluidRow(
       
       column(3, 
@@ -103,7 +105,8 @@ mod_summary_ui <- function(id){
           id = ns("go_clear_filters"), 
           title = "Reset all filters"
         )
-      )
+      ),
+      infoBoxOutput(outputId = ns("info_accuracy"), width = 3)
     ),
     
     fluidRow(
@@ -176,18 +179,7 @@ mod_summary_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
-    breaks <- c(
-      seq(from = 1, to = 2, by = 0.25), 
-      seq(from = 2.5, to = 15, by = 2)
-    )
-    
-    data_full <- read_data() %>% 
-      dplyr::mutate(HomeTeam  = map_game_to_home_team(Match), 
-                    AwayTeam  = map_game_to_away_team(Match), 
-                    OddsMod   = dplyr::if_else(Odds > 5, 5, Odds),
-                    OddsGroup = cut(OddsMod, breaks = breaks) %>% as.character(),
-                    BetDay    = as.Date(BetDay),
-                    MatchDay  = as.Date(MatchDay))
+    data_full <- read_and_prep_data()
     
     df_count_bets <- data_full %>% 
       dplyr::mutate(ExposureBets = dplyr::if_else(is.na(Revenue) | is.na(Match), 0, 1)) %>% 
@@ -419,6 +411,14 @@ mod_summary_server <- function(id){
       )
     })
     
+    output$info_accuracy <- renderInfoBox({
+      infoBox(
+        title = "Accuracy", 
+        value = df_info()$Accuracy %>% add_pct(),
+        icon = icon("check-circle")
+      )
+    })
+    
     ## Info boxes end
     
     ## Tables with earnings
@@ -501,15 +501,8 @@ mod_summary_server <- function(id){
     })
     
     df_bets <- reactive({
-      read_data() %>% 
-        dplyr::group_by(MatchDay, Match) %>% 
-        calculate_earnings() %>% 
-        dplyr::mutate(BetsInGame = Bets) %>% 
-        dplyr::filter(BetsInGame > 0) %>% 
-        dplyr::group_by(BetsInGame) %>% 
-        calculate_earnings() %>% 
-        dplyr::select(-Bets) %>% 
-        dplyr::rename(Bets = BetsInGame)
+      data() %>% 
+        calculate_earnings_for_bets_in_game()
     })
     
     output$table_bets <- DT::renderDataTable({
@@ -691,7 +684,7 @@ mod_summary_server <- function(id){
       
       df_bets() %>% 
         dplyr::slice(input$table_bets_rows_selected) %>% 
-        dplyr::pull(Bets)
+        dplyr::pull(BetsInGame)
       
     })
     

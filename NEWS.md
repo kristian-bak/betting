@@ -1,3 +1,7 @@
+# Betting 1.1.1
+
+* Fixing bug related to number of rows in pop up dataset for "number of bets per game" does not match the summarised earnings table
+
 # Betting 1.1.0
 
 * Adding tab related to number of bets per game

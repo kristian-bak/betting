@@ -8,12 +8,17 @@ calculate_earnings(
   data,
   var_bets = NULL,
   var_stake = "Stake",
-  var_revenue = "Revenue",
-  order_by = NULL
+  var_revenue = "Revenue"
 )
 }
 \arguments{
 \item{data}{tibble with bets (see `read_data`)}
+
+\item{var_bets}{character string with variable name for "bets" column (Default is NULL, meaning summing exposure)}
+
+\item{var_stake}{character string with variable name for "stake" column (Default is "Stake")}
+
+\item{var_revenue}{character string with variable name for "Revenue" column (Default is "Revenue")}
 }
 \description{
 Calculate earnings

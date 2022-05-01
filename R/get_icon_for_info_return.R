@@ -9,7 +9,7 @@ get_icon_for_info_return <- function(x) {
     
   } else if (x >= 0) {
    
-    out <- icon("arrow-up")
+    out <- icon("rocket")
     
   } else {
     
