@@ -489,13 +489,12 @@ mod_summary_server <- function(id){
     })
     
     df_team_combined <- reactive({
+      
       dplyr::bind_rows(
         df_team_home(), 
         df_team_away()
       ) %>% 
-        dplyr::group_by(Team) %>% 
-        calculate_earnings(var_bets = "Bets", var_stake = "Stake", var_revenue = "Revenue") %>% 
-        dplyr::arrange(dplyr::desc(Bets))
+        calculate_earnings_for_teams()
     })
     
     output$table_team <- DT::renderDataTable({

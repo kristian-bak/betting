@@ -1,3 +1,5 @@
+# Betting 1.2.1
+
 # Betting 1.2.0
 
 * Adding summary of selected covariate using `summary`

@@ -7,7 +7,8 @@
 calculate_earnings <- function(data, var_bets = NULL, var_stake = "Stake", var_revenue = "Revenue") {
   
   data %>% 
-    dplyr::mutate(Exposure = if (!is.null(var_bets)) NA else dplyr::if_else(is.na(Revenue), 0, 1)) %>% 
+    dplyr::mutate(Exposure = if (!is.null(var_bets)) get(var_bets) else dplyr::if_else(is.na(Revenue), 0, 1), 
+                  Correct = if ("Correct" %in% names(data)) Correct else Accuracy * Bets / 100) %>% 
     dplyr::summarise(Bets = if (is.null(var_bets)) sum(Exposure) else sum(get(var_bets)),
                      Stake = round(sum(get(var_stake), na.rm = TRUE), 0),
                      Accuracy = round(100 * sum(Correct * Exposure) / sum(Exposure), 2),
