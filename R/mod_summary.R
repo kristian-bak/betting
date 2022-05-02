@@ -456,7 +456,8 @@ mod_summary_server <- function(id){
     })
     
     output$table_game_type <- DT::renderDataTable({
-      DT::datatable(df_game_type(), selection = "single")
+      DT::datatable(df_game_type(), selection = "single") %>% 
+        color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
     
     df_tournament <- reactive({
@@ -467,7 +468,8 @@ mod_summary_server <- function(id){
     })
     
     output$table_tournament <- DT::renderDataTable({
-      DT::datatable(df_tournament())
+      DT::datatable(df_tournament()) %>% 
+        color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
     
     df_team_home <- reactive({
@@ -498,7 +500,8 @@ mod_summary_server <- function(id){
     })
     
     output$table_team <- DT::renderDataTable({
-      DT::datatable(df_team_combined(), selection = "single")
+      DT::datatable(df_team_combined(), selection = "single") %>% 
+        color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
     
     
@@ -510,7 +513,8 @@ mod_summary_server <- function(id){
     })
     
     output$table_game <- DT::renderDataTable({
-      DT::datatable(df_game(), selection = "single")
+      DT::datatable(df_game(), selection = "single") %>% 
+        color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
     
     df_odds_group <- reactive({
@@ -521,7 +525,8 @@ mod_summary_server <- function(id){
     })
     
     output$table_odds_group <- DT::renderDataTable({
-      DT::datatable(df_odds_group(), selection = "single")
+      DT::datatable(df_odds_group(), selection = "single") %>% 
+        color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
     
     df_bets <- reactive({
@@ -530,7 +535,8 @@ mod_summary_server <- function(id){
     })
     
     output$table_bets <- DT::renderDataTable({
-      DT::datatable(df_bets(), selection = "single")
+      DT::datatable(df_bets(), selection = "single") %>% 
+        color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
     
     ## End of tables with earnings

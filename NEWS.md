@@ -1,4 +1,6 @@
-# Betting 1.2.1
+# Betting 1.3.0
+
+* Adding `color_by` which allows for simple coloring of `DT::datatable`
 
 # Betting 1.2.0
 
