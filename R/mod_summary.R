@@ -150,16 +150,25 @@ mod_summary_ui <- function(id){
     
     fluidRow(
       shinyjs::useShinyjs(),
-      shinyjs::hidden(
-        tagList(
+      column(3, 
+        shinyjs::hidden(
           selectInput(
-            inputId = ns("select_yaxis"), 
-            label = "Y axis", 
+            inputId = ns("select_yaxis1"), 
+            label = "Y axis 1", 
             choices = c("Bets", "Stake", "Revenue", "Earnings", "Return"), 
-            selected = "Earnings", 
-            width = "16.66667%",
+            selected = "Earnings"
           )
         )
+      ),
+      column(3, 
+        shinyjs::hidden(
+          selectizeInput(
+            inputId = ns("select_yaxis2"), 
+            label = "Y axis 2", 
+            choices = c("", "Bets", "Stake", "Revenue", "Earnings", "Return"), 
+            selected = "Earnings"
+          )
+        ) 
       )
     ),
     
@@ -552,14 +561,22 @@ mod_summary_server <- function(id){
     output$plot_earnings <- plotly::renderPlotly({
       
       plot_data() %>% 
-        plot_earnings(y = input$select_yaxis)
+        plot_earnings(
+          y1 = input$select_yaxis1, 
+          y2 = input$select_yaxis2
+        )
       
     })
     
     observe({
-      if (exists("plot_data")) {
-        shinyjs::show(id = "select_yaxis")
-        shinyjs::show(id = "select_covariate")
+      if (is.data.frame(df_game_type())) {
+        
+        shinyjs::delay(ms = 0.1, expr = {
+          shinyjs::show(id = "select_yaxis1")
+          shinyjs::show(id = "select_yaxis2")
+          shinyjs::show(id = "select_covariate")
+        })
+        
       }
     })
     

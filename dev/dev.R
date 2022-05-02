@@ -16,6 +16,7 @@ devtools::test()
 
 ## Add test
 usethis::use_test("calculate_earnings")
+usethis::use_test("plotly_double_yaxis")
 
 ## Check everything
 devtools::check()

@@ -1,3 +1,7 @@
+# Betting 1.4.0
+
+* Adding double y axis plotting feature
+
 # Betting 1.3.0
 
 * Adding `color_by` which allows for simple coloring of `DT::datatable`

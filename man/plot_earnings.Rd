@@ -4,7 +4,14 @@
 \alias{plot_earnings}
 \title{Plot earnings}
 \usage{
-plot_earnings(data, y)
+plot_earnings(data, y1, y2)
+}
+\arguments{
+\item{data}{data.frame}
+
+\item{y1}{character string with name of y}
+
+\item{y2}{optional character string with name of second y axis}
 }
 \description{
 Plot earnings
