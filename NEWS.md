@@ -1,3 +1,9 @@
+# Betting 1.5.0
+
+* Adding `calculate_smart_stake`
+* Including subgames for doubles and tribles 
+* Initializing single plotting rather than having earnings twice
+
 # Betting 1.4.0
 
 * Adding double y axis plotting feature

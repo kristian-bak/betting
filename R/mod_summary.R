@@ -165,8 +165,7 @@ mod_summary_ui <- function(id){
           selectizeInput(
             inputId = ns("select_yaxis2"), 
             label = "Y axis 2", 
-            choices = c("", "Bets", "Stake", "Revenue", "Earnings", "Return"), 
-            selected = "Earnings"
+            choices = c("", "Bets", "Stake", "Revenue", "Earnings", "Return")
           )
         ) 
       )
@@ -315,7 +314,7 @@ mod_summary_server <- function(id){
     data <- reactive({
       data_tmp <- data_full %>% 
         dplyr::filter(MatchDay >= input$click_date[1], MatchDay <= input$click_date[2]) %>% 
-        dplyr::filter(Stake >= input$slide_stake[1], Stake <= input$slide_stake[2])
+        dplyr::filter((Stake >= input$slide_stake[1] & Stake <= input$slide_stake[2]) | is.na(Stake))
       
       if (input$select_team != "") {
         
@@ -477,7 +476,7 @@ mod_summary_server <- function(id){
     })
     
     output$table_tournament <- DT::renderDataTable({
-      DT::datatable(df_tournament()) %>% 
+      DT::datatable(df_tournament(), selection = "single") %>% 
         color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
     
@@ -590,7 +589,14 @@ mod_summary_server <- function(id){
     })
     
     output$table_game_type_subset <- DT::renderDataTable(
-      DT::datatable(get_selected_subset(data = data(), GameType == react_game_type()))
+      DT::datatable(
+        get_selected_subset(
+          data = data(), 
+          GameType == react_game_type(), 
+          var = "GameType",
+          value = react_game_type()
+        )
+      )
     )
     
     observeEvent(input$table_game_type_rows_selected, {

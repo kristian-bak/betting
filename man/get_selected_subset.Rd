@@ -4,12 +4,21 @@
 \alias{get_selected_subset}
 \title{Get selected subset}
 \usage{
-get_selected_subset(data, ...)
+get_selected_subset(data, ..., var = "", value = "")
 }
 \arguments{
 \item{data}{tibble obtained from `read_data`}
 
 \item{...}{filter options}
+
+\item{var}{character string with variable name used to select subset based on. If "GameType", 
+then `get_subset_and_subgames` is called to ensure double and tripple subgames are included as well
+Default is "", meaning subgames won't be included}
+
+\item{value}{character string with value of GameType column (only relevant if Double or Trippel)}
+}
+\value{
+subset of data
 }
 \description{
 Get selected subset
