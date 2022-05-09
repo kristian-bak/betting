@@ -3,7 +3,7 @@ test_that("Test: plotly_double_yaxis", {
   data <- read_and_prep_data()
   
   out1 <- kb.utils::catch_error(
-    plotly_double_y_axis(
+    plotly_double_yaxis(
       data = data, 
       type = "scatter", 
       mode = "lines", 
@@ -22,7 +22,7 @@ test_that("Test: plotly_double_yaxis", {
   expect_true(is.null(out1$error))
   
   out2 <- kb.utils::catch_error(
-    plotly_double_y_axis(
+    plotly_double_yaxis(
       data = data, 
       type = "scatter", 
       mode = "lines", 

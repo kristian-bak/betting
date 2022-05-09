@@ -40,6 +40,9 @@ usethis::use_package("kb.utils")
 usethis::use_package("htmltools")
 remotes::install_github("kristian-bak/kb.utils")
 
+## Add module
+golem::add_module(name = "upload_data")
+
 ## Add NEWS
 usethis::use_news_md()
 

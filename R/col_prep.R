@@ -4,6 +4,13 @@
 #' 
 col_prep <- function(data, breaks) {
   
+  if (missing(breaks)) {
+    breaks <- c(
+      seq(from = 1, to = 2, by = 0.25), 
+      seq(from = 2.5, to = 15, by = 2)
+    )
+  }
+  
   data %>% 
     dplyr::mutate(HomeTeam  = map_game_to_home_team(Match), 
                   AwayTeam  = map_game_to_away_team(Match), 

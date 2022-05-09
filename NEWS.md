@@ -1,3 +1,7 @@
+# Betting 1.6.0
+
+* Adding upload data module
+
 # Betting 1.5.0
 
 * Adding `calculate_smart_stake`

@@ -7,7 +7,7 @@ test_that("Test: calculate_earnings", {
   
   expect_equal(class(out)[1], "tbl_df")
   
-  expect_equal(names(out), c("Bets", "Stake", "Revenue", "Earnings", "Return"))
+  expect_equal(names(out), c("Bets", "Stake", "Accuracy", "Revenue", "Earnings", "Return"))
   
   expect_true(sapply(out, is.numeric) %>% 
     all()

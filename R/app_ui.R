@@ -18,7 +18,8 @@ app_ui <- function(request) {
       show_version_number(),
       
       sidebarMenu(
-        menuItem("Overview", tabName = "dashboard", icon = icon("chart-line"))
+        menuItem("Overview", tabName = "dashboard", icon = icon("chart-line")),
+        menuItem("Upload data", tabName = "upload", icon = icon("upload"))
       )
       
     ),
@@ -30,6 +31,13 @@ app_ui <- function(request) {
         tabItem(tabName = "dashboard",
                 
                 mod_summary_ui("summary_ui_1")
+                
+        ),
+        
+        # Second tab content
+        tabItem(tabName = "upload",
+                
+                mod_upload_data_ui("upload_data_ui_1")
                 
         )
       )

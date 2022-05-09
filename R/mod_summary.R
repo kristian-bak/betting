@@ -208,21 +208,21 @@ mod_summary_ui <- function(id){
 #' summary Server Functions
 #'
 #' @noRd 
-mod_summary_server <- function(id){
+mod_summary_server <- function(id, file_input){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
-    data_full <- read_and_prep_data()
+    data_init_load <- read_and_prep_data()
     
-    df_count_bets <- data_full %>% 
+    df_count_bets <- data_init_load %>% 
       dplyr::mutate(ExposureBets = dplyr::if_else(is.na(Revenue) | is.na(Match), 0, 1)) %>% 
       dplyr::group_by(MatchDay, Match) %>% 
       dplyr::summarise(Bets = sum(ExposureBets), .groups = "drop")
     
-    data_full <- data_full %>% 
+    data_init_load <- data_init_load %>% 
       dplyr::left_join(df_count_bets, by = c("MatchDay", "Match"))
     
-    if (max(data_full$Stake, na.rm = TRUE) > 500) {
+    if (max(data_init_load$Stake, na.rm = TRUE) > 500) {
       warning("sliderinput named slide_stake has max hardcoded as 500. Change this to a update statement")
     }
     
@@ -242,7 +242,7 @@ mod_summary_server <- function(id){
       updateDateRangeInput(
         session = session, 
         inputId = "click_date", 
-        start = min(data_full$BetDay), 
+        start = min(data_init_load$BetDay), 
         end = Sys.Date()
       )
       
@@ -312,6 +312,14 @@ mod_summary_server <- function(id){
     })
     
     data <- reactive({
+      
+      if (!is.null(file_input())) {
+        data_full <- readxl::read_excel(path = file_input()$datapath) %>% 
+          col_prep()
+      } else {
+        data_full <- data_init_load
+      }
+      
       data_tmp <- data_full %>% 
         dplyr::filter(MatchDay >= input$click_date[1], MatchDay <= input$click_date[2]) %>% 
         dplyr::filter((Stake >= input$slide_stake[1] & Stake <= input$slide_stake[2]) | is.na(Stake))

@@ -7,6 +7,8 @@
 app_server <- function( input, output, session ) {
   # Your application server logic 
   
-  mod_summary_server("summary_ui_1")
+  file_input <- mod_upload_data_server("upload_data_ui_1")
+  
+  mod_summary_server(id = "summary_ui_1", file_input = file_input)
   
 }
