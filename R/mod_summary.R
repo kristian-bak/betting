@@ -144,6 +144,10 @@ mod_summary_ui <- function(id){
         show_earning_panel(
           title = "Bets per match", 
           outputId = ns("table_bets")
+        ),
+        show_earning_panel(
+          title = "Stake", 
+          outputId = ns("table_stake")
         )
       )
     ),
@@ -213,14 +217,6 @@ mod_summary_server <- function(id, file_input){
     ns <- session$ns
     
     data_init_load <- read_and_prep_data()
-    
-    df_count_bets <- data_init_load %>% 
-      dplyr::mutate(ExposureBets = dplyr::if_else(is.na(Revenue) | is.na(Match), 0, 1)) %>% 
-      dplyr::group_by(MatchDay, Match) %>% 
-      dplyr::summarise(Bets = sum(ExposureBets), .groups = "drop")
-    
-    data_init_load <- data_init_load %>% 
-      dplyr::left_join(df_count_bets, by = c("MatchDay", "Match"))
     
     if (max(data_init_load$Stake, na.rm = TRUE) > 500) {
       warning("sliderinput named slide_stake has max hardcoded as 500. Change this to a update statement")
@@ -464,6 +460,7 @@ mod_summary_server <- function(id, file_input){
     
     ## Tables with earnings
     
+    ## Bet type
     df_game_type <- reactive({
       data() %>% 
         dplyr::group_by(GameType) %>% 
@@ -476,6 +473,7 @@ mod_summary_server <- function(id, file_input){
         color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
     
+    ## Tournament
     df_tournament <- reactive({
       data() %>% 
         dplyr::group_by(Tournament) %>% 
@@ -488,6 +486,7 @@ mod_summary_server <- function(id, file_input){
         color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
     
+    ## Team
     df_team_home <- reactive({
       data() %>% 
         dplyr::filter(!is.na(HomeTeam)) %>% 
@@ -520,7 +519,7 @@ mod_summary_server <- function(id, file_input){
         color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
     
-    
+    ## Oddset vs live betting
     df_game <- reactive({
       data() %>% 
         dplyr::group_by(Game) %>% 
@@ -533,6 +532,7 @@ mod_summary_server <- function(id, file_input){
         color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
     
+    ## Odds range
     df_odds_group <- reactive({
       data() %>% 
         dplyr::group_by(OddsGroup) %>% 
@@ -545,6 +545,7 @@ mod_summary_server <- function(id, file_input){
         color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
     
+    ## Bets per match
     df_bets <- reactive({
       data() %>% 
         calculate_earnings_for_bets_in_game()
@@ -554,6 +555,28 @@ mod_summary_server <- function(id, file_input){
       DT::datatable(df_bets(), selection = "single") %>% 
         color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
+    
+    ## Stake
+    df_stake <- reactive({
+      data() %>% 
+        dplyr::filter(Stake > 0) %>% 
+        dplyr::mutate(
+          StakeMidpoint = kb.utils::cut_var(
+            x = StakeMod, 
+            breaks = c(0, 25, 50, 75, 100, 200)
+          )
+        ) %>% 
+        dplyr::group_by(StakeGroup, StakeMidpoint) %>% 
+        calculate_earnings() %>% 
+        dplyr::arrange(StakeMidpoint) %>% 
+        dplyr::select(-StakeMidpoint)
+    })
+    
+    output$table_stake <- DT::renderDataTable({
+      DT::datatable(df_stake(), selection = "single") %>% 
+        color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
+    })
+    
     
     ## End of tables with earnings
         
@@ -770,6 +793,36 @@ mod_summary_server <- function(id, file_input){
     })
     
     ## Show subset for bets per match - end
+    
+    ## Show subset for stake - start
+    react_stake <- reactive({
+      
+      df_stake() %>% 
+        dplyr::slice(input$table_stake_rows_selected) %>% 
+        dplyr::pull(StakeGroup)
+      
+    })
+    
+    output$table_stake_subset <- DT::renderDataTable({
+      
+      DT::datatable(get_selected_subset(data = data(), StakeGroup == react_stake()))
+      
+    })
+    
+    observeEvent(input$table_stake_rows_selected, {
+      
+      showModal(
+        ui = modalDialog(
+          DT::dataTableOutput(outputId = ns("table_stake_subset")), 
+          size = "l", 
+          easyClose = TRUE
+        ), 
+        session = session
+      )
+      
+    })
+    
+    ## Show subset for stake - end
     
     output$plot_distribution <- plotly::renderPlotly({
       

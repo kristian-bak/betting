@@ -17,6 +17,6 @@ get_selected_subset <- function(data, ..., var = "", value = "") {
   }
   
   df_tmp %>% 
-    dplyr::select(-BetDay, -HomeTeam, -AwayTeam, -OddsGroup, -OddsMod)
+    dplyr::select(-BetDay, -HomeTeam, -AwayTeam, -OddsGroup, -OddsMod, -StakeGroup, -StakeMod)
   
 }

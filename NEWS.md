@@ -1,3 +1,7 @@
+# Betting 1.7.0
+
+* Adding a tab for earnings calculations grouped by `stake`
+
 # Betting 1.6.0
 
 * Adding upload data module
