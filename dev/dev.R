@@ -27,6 +27,12 @@ usethis::use_version()
 ## Deploy
 rsconnect::deployApp()
 
+## Code coverage (restart first, once devtools::install() needed)
+devtools::test_coverage()
+
+## Install locally
+devtools::install()
+
 ## Package dependency
 usethis::use_package("dplyr")
 usethis::use_package("shiny")
