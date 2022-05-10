@@ -3,5 +3,5 @@
 #' @return character vector
 #' 
 add_pct <- function(x) {
-  paste(x, " %", sep = " ")
+  paste0(x, " %")
 }

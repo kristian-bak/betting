@@ -1,3 +1,7 @@
+# Betting 1.7.1
+
+* Adding multiple unit tests
+
 # Betting 1.7.0
 
 * Adding a tab for earnings calculations grouped by `stake`

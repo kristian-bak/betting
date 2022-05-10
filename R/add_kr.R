@@ -3,5 +3,5 @@
 #' @return character vector
 #' 
 add_kr <- function(x) {
-  paste(x, " kr", sep = " ")
+  paste0(x, " kr")
 }
