@@ -1,3 +1,7 @@
+# Betting 1.8.0
+
+* Adding automatic update of data
+
 # Betting 1.7.1
 
 * Adding multiple unit tests

@@ -11,14 +11,15 @@ floor_to_nearest_half <- function(x) {
 #' @param odds odds as numeric value
 #' @param stake stake as a numeric value
 #' @param eps epsilon, a numerid value, used fine smart stakes around the stake value (default is 0.5)
+#' @param simple logical indicating if output should be kept simple, i.e few columns (default is TRUE)
 #' 
-calculate_smart_stake <- function(odds, stake, eps = 0.5) {
+calculate_smart_stake <- function(odds, stake, eps = 0.5, simple = TRUE) {
   
   stake_range <- seq(from = stake - eps, to = stake + eps, by = 0.01)
   
   revenue <- floor_to_nearest_half(odds * stake_range)
   
-  dplyr::tibble(stake_range, stake, revenue, odds) %>% 
+  df <- dplyr::tibble(stake_range, stake, revenue, odds) %>% 
     dplyr::group_by(revenue) %>% 
     dplyr::summarise(
       stake_orignal = unique(stake),
@@ -34,5 +35,20 @@ calculate_smart_stake <- function(odds, stake, eps = 0.5) {
                   return_original = 100 * round(earnings_original / stake_orignal, 2), 
                   return_smart = 100 * round(earnings_smart / stake_smart, 2), 
                   excess_return = return_smart - return_original)
+  
+  if (simple) {
+    
+    df_out <- df %>% 
+      dplyr::select(odds, stake_orignal, revenue_original, stake_smart, revenue_smart)
+    
+  } else {
+    
+    df_out <- df
+    
+  }
+  
+  df_out <- as.data.frame(df_out)
+  
+  return(df_out)
   
 }

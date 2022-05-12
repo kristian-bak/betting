@@ -4,7 +4,7 @@
 \alias{calculate_smart_stake}
 \title{Calculate smart stake}
 \usage{
-calculate_smart_stake(odds, stake, eps = 0.5)
+calculate_smart_stake(odds, stake, eps = 0.5, simple = TRUE)
 }
 \arguments{
 \item{odds}{odds as numeric value}
@@ -12,6 +12,8 @@ calculate_smart_stake(odds, stake, eps = 0.5)
 \item{stake}{stake as a numeric value}
 
 \item{eps}{epsilon, a numerid value, used fine smart stakes around the stake value (default is 0.5)}
+
+\item{simple}{logical indicating if output should be kept simple, i.e few columns (default is TRUE)}
 }
 \description{
 Calculate smart stake
