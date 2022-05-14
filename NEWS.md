@@ -1,5 +1,7 @@
 # Betting 1.9.0
 
+* Adding info box related to winning streak
+
 # Betting 1.8.1
 
 * Reverting automatic update of data due to HTTP error 404

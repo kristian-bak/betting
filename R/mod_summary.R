@@ -32,13 +32,14 @@ mod_summary_ui <- function(id){
           choices = NULL
         )
       ), 
-      column(2,
+      column(3,
         selectizeInput(
           inputId = ns("select_tournament"), 
           label = "Tournament", 
           choices = NULL
         )
-      )
+      ),
+      infoBoxOutput(outputId = ns("info_streak"), width = 3)
     ),
     
     fluidRow(
@@ -409,6 +410,33 @@ mod_summary_server <- function(id, file_input){
     })
     
     ## Info boxes
+    
+    winning_streak <- reactive({
+      
+      winning_streak <- data() %>% 
+        dplyr::arrange(MatchDay) %>% 
+        dplyr::mutate(WinningStreak = cumsum_with_reset(x = Correct)) %>% 
+        dplyr::pull(WinningStreak)
+    
+    longest_winning_streak <- max(winning_streak)
+    current_winning_streak <- winning_streak %>% purrr::pluck(length(.))
+    
+    out <- list("longest_winning_streak" = longest_winning_streak, 
+                "current_winning_streak" = current_winning_streak)
+    
+    return(out)
+    
+    })
+    
+    output$info_streak <- renderInfoBox({
+      infoBox(
+        title = "Winning streak",
+        value = paste0(winning_streak()$current_winning_streak, " / ",
+                       winning_streak()$longest_winning_streak),
+        subtitle = "Current / longest",
+        icon = icon("bolt"), 
+      )
+    })
     
     df_info <- reactive({
       data() %>% 

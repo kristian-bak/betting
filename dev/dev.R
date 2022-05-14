@@ -17,6 +17,7 @@ devtools::test()
 ## Add test
 usethis::use_test("add_kr")
 usethis::use_test("add_pct")
+usethis::use_test("cumsum_with_reset")
 usethis::use_test("calculate_earnings")
 usethis::use_test("calculate_earnings_for_bets_in_game")
 usethis::use_test("plotly_double_yaxis")
