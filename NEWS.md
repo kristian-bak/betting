@@ -1,3 +1,7 @@
+# Betting 1.8.1
+
+* Reverting automatic update of data due to HTTP error 404
+
 # Betting 1.8.0
 
 * Adding automatic update of data
