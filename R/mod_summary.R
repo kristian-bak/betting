@@ -29,14 +29,22 @@ mod_summary_ui <- function(id){
         selectizeInput(
           inputId = ns("select_team"), 
           label = "Team", 
-          choices = NULL
+          choices = NULL,
+          multiple = TRUE,
+          options = list(
+            'plugins' = list('remove_button')
+          )
         )
       ), 
       column(3,
         selectizeInput(
           inputId = ns("select_tournament"), 
           label = "Tournament", 
-          choices = NULL
+          choices = "", 
+          multiple = TRUE,
+          options = list(
+            'plugins' = list('remove_button')
+          )
         )
       ),
       infoBoxOutput(outputId = ns("info_streak"), width = 3)
@@ -85,7 +93,11 @@ mod_summary_ui <- function(id){
         selectizeInput(
           inputId = ns("select_game_type"), 
           label = "Bet type", 
-          choices = NULL
+          choices = NULL,
+          multiple = TRUE,
+          options = list(
+            'plugins' = list('remove_button')
+          )
         )
       ),
       column(2, 
@@ -321,10 +333,10 @@ mod_summary_server <- function(id, file_input){
         dplyr::filter(MatchDay >= input$click_date[1], MatchDay <= input$click_date[2]) %>% 
         dplyr::filter((Stake >= input$slide_stake[1] & Stake <= input$slide_stake[2]) | is.na(Stake))
       
-      if (input$select_team != "") {
+      if (!is.null(input$select_team)) {
         
         data_tmp <- data_tmp %>% 
-          dplyr::filter(HomeTeam == input$select_team | AwayTeam == input$select_team)
+          dplyr::filter(HomeTeam %in% input$select_team | AwayTeam %in% input$select_team)
   
       }
       
@@ -335,17 +347,17 @@ mod_summary_server <- function(id, file_input){
         
       }
       
-      if (input$select_tournament != "") {
+      if (!is.null(input$select_tournament)) {
         
         data_tmp <- data_tmp %>% 
-          dplyr::filter(Tournament == input$select_tournament)
+          dplyr::filter(Tournament %in% input$select_tournament)
         
       }
       
-      if (input$select_game_type != "") {
+      if (!is.null(input$select_game_type)) {
         
         data_tmp <- data_tmp %>% 
-          dplyr::filter(GameType == input$select_game_type)
+          dplyr::filter(GameType %in% input$select_game_type)
         
       }
       
@@ -355,43 +367,37 @@ mod_summary_server <- function(id, file_input){
     
     observe({
       
-      if (input$select_team != "") {
-        return()
+      if (is.null(input$select_team)) {
+        updateSelectizeInput(
+          session = session, 
+          inputId = "select_team", 
+          choices = c("", get_team_names(data = data()))
+        )
       }
-      
-      updateSelectizeInput(
-        session = session, 
-        inputId = "select_team", 
-        choices = c("", get_team_names(data = data()))
-      )
       
     })
     
     observe({
       
-      if (input$select_game_type != "") {
-        return()
+      if (is.null(input$select_game_type)) {
+        updateSelectizeInput(
+          session = session, 
+          inputId = "select_game_type", 
+          choices = c("", get_game_types(data = data()))
+        )
       }
-      
-      updateSelectizeInput(
-        session = session, 
-        inputId = "select_game_type", 
-        choices = c("", get_game_types(data = data()))
-      )
       
     })
     
     observe({
-      
-      if (input$select_tournament != "") {
-        return()
+            
+      if (is.null(input$select_tournament)) {
+        updateSelectizeInput(
+          session = session, 
+          inputId = "select_tournament", 
+          choices = c("", get_tournament_names(data = data()))
+        )
       }
-      
-      updateSelectizeInput(
-        session = session, 
-        inputId = "select_tournament", 
-        choices = c("", get_tournament_names(data = data()))
-      )
       
     })
     

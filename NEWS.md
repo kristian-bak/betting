@@ -1,3 +1,7 @@
+# Betting 1.10.0
+
+* Allowing multiple selections for filters
+
 # Betting 1.9.0
 
 * Adding info box related to winning streak
