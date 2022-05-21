@@ -1,3 +1,7 @@
+# Betting 1.10.1
+
+* Fixing bug in `cumsum_with_reset` for scalar inputs
+
 # Betting 1.10.0
 
 * Allowing multiple selections for filters

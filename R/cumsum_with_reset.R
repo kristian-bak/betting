@@ -14,16 +14,19 @@ cumsum_with_reset <- function(x, reset = 0) {
     y[1] <- 0
   }
   
-  for (i in 2:n) {
-    if (x[i] != reset) {
-      if (x[i - 1] != reset) {
-        y[i] <- y[i - 1] + x[i]
+  if (length(x) > 1) {
+    for (i in 2:n) {
+      if (x[i] != reset) {
+        if (x[i - 1] != reset) {
+          y[i] <- y[i - 1] + x[i]
+        } else {
+          y[i] <- x[i]
+        }
       } else {
-        y[i] <- x[i]
+        y[i] <- 0
       }
-    } else {
-      y[i] <- 0
     }
   }
+
   return(y)
 }
