@@ -1,3 +1,7 @@
+# Betting 1.11.1
+
+* Fixing a bug related to the ordering of the stats table in odds group tab
+
 # Betting 1.11.0
 
 Changes made related to:

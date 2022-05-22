@@ -570,8 +570,8 @@ mod_summary_server <- function(id, file_input){
     df_odds_group <- reactive({
       data() %>% 
         dplyr::group_by(OddsGroup) %>% 
-        calculate_earnings() %>% 
-        dplyr::arrange(OddsGroup)
+        calculate_earnings() %>%
+        arrange_by_odds_group()
     })
     
     output$table_odds_group <- DT::renderDataTable({
