@@ -420,7 +420,7 @@ mod_summary_server <- function(id, file_input){
     winning_streak <- reactive({
       
       winning_streak <- data() %>% 
-        dplyr::arrange(MatchDay) %>% 
+        dplyr::arrange(ID) %>% 
         dplyr::mutate(WinningStreak = cumsum_with_reset(x = Correct)) %>% 
         dplyr::pull(WinningStreak)
     
@@ -884,6 +884,8 @@ mod_summary_server <- function(id, file_input){
       }
       
     })
+    
+    return(data_init_load)
  
   })
 }

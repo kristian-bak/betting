@@ -21,7 +21,8 @@ col_prep <- function(data, breaks) {
                   BetDay     = as.Date(BetDay),
                   MatchDay   = as.Date(MatchDay), 
                   StakeMod   = dplyr::if_else(Stake > 200, 200, Stake),
-                  StakeGroup = cut(Stake, breaks = breaks_stake, include.lowest = TRUE) %>% as.character())
+                  StakeGroup = cut(Stake, breaks = breaks_stake, include.lowest = TRUE) %>% as.character(), 
+                  ID         = dplyr::row_number() %>% rev())
   
   df_count_bets <- data_tmp %>% 
     dplyr::mutate(ExposureBets = dplyr::if_else(is.na(Revenue) | is.na(Match), 0, 1)) %>% 

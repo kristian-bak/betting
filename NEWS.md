@@ -1,3 +1,10 @@
+# Betting 1.11.0
+
+Changes made related to:
+
+* Added the possibility to observe the initial loaded dataset
+* Fixing a bug in calculate the winning streak
+
 # Betting 1.10.1
 
 * Fixing bug in `cumsum_with_reset` for scalar inputs

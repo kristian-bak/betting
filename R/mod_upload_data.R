@@ -18,6 +18,7 @@ mod_upload_data_ui <- function(id){
                        accept = "xlsx")
       )
     ), 
+    h3("Loaded data"),
     fluidRow(
       DT::dataTableOutput(outputId = ns("table_input"))
     )
@@ -28,19 +29,30 @@ mod_upload_data_ui <- function(id){
 #' upload_data Server Functions
 #'
 #' @noRd 
-mod_upload_data_server <- function(id){
+mod_upload_data_server <- function(id, data_init){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
     react_var <- reactiveValues(data = NULL)
     
     observe({
-      req(input$browse_file)
-      react_var$data <- readxl::read_excel(path = input$browse_file$datapath)
+      
+      if (!is.null(input$browse_file)) {
+        react_var$data     <- readxl::read_excel(path = input$browse_file$datapath)
+        react_var$data_out <- react_var$data
+      } else {
+        react_var$data     <- data_init
+        react_var$data_out <- NULL
+      }
+      
     })
     
     output$table_input <- DT::renderDataTable({{
       DT::datatable(react_var$data)
+    }})
+    
+    output$table_init_data <- DT::renderDataTable({{
+      DT::datatable(data_init)
     }})
     
     out <- reactive(input$browse_file)
