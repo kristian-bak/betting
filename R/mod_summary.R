@@ -333,7 +333,9 @@ mod_summary_server <- function(id, file_input){
         #  col_prep()
           
       } else {
+        
         data_full <- data_init_load
+        
       }
       
       data_tmp <- data_full %>% 
@@ -679,7 +681,7 @@ mod_summary_server <- function(id, file_input){
           DT::dataTableOutput(outputId = ns("table_game_type_subset")), 
           size = "l", 
           easyClose = TRUE
-        ), 
+        ),
         session = session
       )
       

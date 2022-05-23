@@ -15,7 +15,7 @@ get_selected_subset(data, ..., var = "", value = "")
 then `get_subset_and_subgames` is called to ensure double and tripple subgames are included as well
 Default is "", meaning subgames won't be included}
 
-\item{value}{character string with value of GameType column (only relevant if Double or Trippel)}
+\item{value}{character string with value of GameType column (only relevant if "Double", "Trippel" or any ling)}
 }
 \value{
 subset of data

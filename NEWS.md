@@ -1,3 +1,8 @@
+# Betting 1.12.0
+
+* Reducing number of columns in the output of loaded data
+* Ensuring subsetting works for x-lings 
+
 # Betting 1.11.4
 
 * Simplifying output of loaded data

@@ -7,12 +7,12 @@ get_subset_and_subgames <- function(data, ...) {
   df1 <- data %>% 
     dplyr::filter(...)
   
-  triples <- df1 %>% 
+  sub_bets <- df1 %>% 
     dplyr::pull(Bet) %>% 
     paste0(collapse = "|")
   
   df2 <- data %>% 
-    dplyr::filter(grepl(triples, Bet))
+    dplyr::filter(grepl(sub_bets, Bet))
   
   return(df2)
   
