@@ -97,7 +97,10 @@ mod_upload_data_server <- function(id, data_init){
     })
     
     output$table_input <- DT::renderDataTable({{
-      DT::datatable(react_var$data_loaded)
+      DT::datatable(
+        data = react_var$data_loaded %>% 
+          dplyr::select(MatchDay, Tournament, Match, Game, Bet, Odds, Correct, Stake, Revenue, GameType)
+      )
     }})
     
     #out <- reactive(input$browse_file)
