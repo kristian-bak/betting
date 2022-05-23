@@ -1,3 +1,7 @@
+# Betting 1.11.3
+
+* Included input validation when uploading excel sheet
+
 # Betting 1.11.2
 
 Changes made related to:

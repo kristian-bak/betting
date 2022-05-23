@@ -323,10 +323,15 @@ mod_summary_server <- function(id, file_input){
     })
     
     data <- reactive({
-      
+
       if (!is.null(file_input())) {
-        data_full <- readxl::read_excel(path = file_input()$datapath) %>% 
+
+        data_full <- file_input() %>% 
           col_prep()
+          
+        #data_full <- readxl::read_excel(path = file_input()$datapath) %>% 
+        #  col_prep()
+          
       } else {
         data_full <- data_init_load
       }
@@ -594,6 +599,7 @@ mod_summary_server <- function(id, file_input){
     
     ## Stake
     df_stake <- reactive({
+      
       data() %>% 
         dplyr::filter(Stake > 0) %>% 
         dplyr::mutate(
