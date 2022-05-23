@@ -1,3 +1,7 @@
+# Betting 1.11.4
+
+* Simplifying output of loaded data
+
 # Betting 1.11.3
 
 * Included input validation when uploading excel sheet
