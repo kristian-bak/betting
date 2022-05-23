@@ -152,7 +152,8 @@ mod_summary_ui <- function(id){
         ),
         show_earning_panel(
           title = "Odds ranges", 
-          outputId = ns("table_odds_group")
+          outputId = ns("table_odds_group"),
+          p("Note: odds larger than 5 are placed in the interval (4, 5]")
         ),
         show_earning_panel(
           title = "Bets per match", 
@@ -160,7 +161,8 @@ mod_summary_ui <- function(id){
         ),
         show_earning_panel(
           title = "Stake", 
-          outputId = ns("table_stake")
+          outputId = ns("table_stake"),
+          p("Note: stake larger than 200 are placed in the interval (100, 200]")
         )
       )
     ),

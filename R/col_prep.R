@@ -5,10 +5,7 @@
 col_prep <- function(data, breaks) {
   
   if (missing(breaks)) {
-    breaks <- c(
-      seq(from = 1, to = 2, by = 0.25), 
-      seq(from = 2.5, to = 15, by = 2)
-    )
+    breaks <- c(1, 1.25, 1.50, 1.75, 2, 2.5, 3, 4, 5)
   }
   
   breaks_stake <- c(0, 25, 50, 75, 100, 200)
@@ -16,12 +13,12 @@ col_prep <- function(data, breaks) {
   data_tmp <- data %>% 
     dplyr::mutate(HomeTeam   = map_game_to_home_team(Match), 
                   AwayTeam   = map_game_to_away_team(Match), 
-                  OddsMod    = dplyr::if_else(Odds > 5, 5, Odds),
+                  OddsMod    = dplyr::if_else(Odds >= 5, 5, Odds),
                   OddsGroup  = cut(OddsMod, breaks = breaks, include.lowest = TRUE) %>% as.character(),
                   BetDay     = as.Date(BetDay),
                   MatchDay   = as.Date(MatchDay), 
                   StakeMod   = dplyr::if_else(Stake > 200, 200, Stake),
-                  StakeGroup = cut(Stake, breaks = breaks_stake, include.lowest = TRUE) %>% as.character(), 
+                  StakeGroup = cut(StakeMod, breaks = breaks_stake, include.lowest = TRUE) %>% as.character(), 
                   ID         = dplyr::row_number() %>% rev())
   
   df_count_bets <- data_tmp %>% 

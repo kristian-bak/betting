@@ -1,3 +1,11 @@
+# Betting 1.11.2
+
+Changes made related to:
+
+* `show_earning_panel` allows additional UI now (used to add a `p()`)
+* NA value in stake group has been removed
+* Odds group is more intuitive now (capped at 5 and last interval indeed is (4, 5])
+
 # Betting 1.11.1
 
 * Fixing a bug related to the ordering of the stats table in odds group tab

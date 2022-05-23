@@ -4,10 +4,7 @@
 read_and_prep_data <- function(breaks) {
   
   if (missing(breaks)) {
-    breaks <- c(
-      seq(from = 1, to = 2, by = 0.25), 
-      seq(from = 2.5, to = 15, by = 2)
-    )
+    breaks <- c(1, 1.25, 1.50, 1.75, 2, 2.5, 3, 4, 5)
   }
   
   read_data() %>% 

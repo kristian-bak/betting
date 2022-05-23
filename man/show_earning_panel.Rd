@@ -4,12 +4,14 @@
 \alias{show_earning_panel}
 \title{Show earning panel}
 \usage{
-show_earning_panel(title, outputId)
+show_earning_panel(title, outputId, ...)
 }
 \arguments{
 \item{title}{character string with title of panel}
 
 \item{outputId}{outputId of tabel output}
+
+\item{...}{additional arguments applied to shiny::tabPanel}
 }
 \description{
 Show earning panel
