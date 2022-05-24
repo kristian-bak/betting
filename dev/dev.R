@@ -54,6 +54,9 @@ remotes::install_github("kristian-bak/kb.utils")
 ## Add module
 golem::add_module(name = "upload_data")
 golem::add_module(name = "calculator")
+golem::add_module(name = "infobox")
+golem::add_module(name = "filters")
+golem::add_module(name = "dropdown_filters")
 
 ## Add NEWS
 usethis::use_news_md()

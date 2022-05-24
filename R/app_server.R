@@ -7,9 +7,13 @@
 app_server <- function( input, output, session ) {
   # Your application server logic 
   
-  file_input <- mod_upload_data_server("upload_data_ui_1", data_init = data_init)
+  input_file <- mod_upload_data_server("upload_data_ui_1", data_init = data$data_init)
+
+  data <- mod_filters_server("filters_ui_1", input_file = input_file)
   
-  data_init  <- mod_summary_server(id = "summary_ui_1", file_input = file_input)
+  mod_infobox_server("infobox_ui_1", data = data$data)
+  
+  mod_summary_server(id = "summary_ui_1", data = data$data)
   
   mod_calculator_server("calculator_ui_1")
   

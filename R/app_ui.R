@@ -31,7 +31,10 @@ app_ui <- function(request) {
         # First tab content
         tabItem(tabName = "dashboard",
                 
+                mod_filters_ui("filters_ui_1"),
+                mod_infobox_ui("infobox_ui_1"),
                 mod_summary_ui("summary_ui_1")
+                
                 
         ),
         

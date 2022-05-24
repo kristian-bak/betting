@@ -1,3 +1,8 @@
+# Betting 2.0.0
+
+* Initial split of summary module into multiple modules
+* Hiding filters using the `dropdownButton` in order to simplify the interface
+
 # Betting 1.14.0
 
 * Adding a `dropdownButton` which allows to group game types together
