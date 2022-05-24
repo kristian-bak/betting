@@ -1,3 +1,5 @@
+# Betting 1.13.0
+
 # Betting 1.12.0
 
 * Reducing number of columns in the output of loaded data
