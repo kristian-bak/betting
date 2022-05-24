@@ -19,7 +19,8 @@ app_ui <- function(request) {
       
       sidebarMenu(
         menuItem("Overview", tabName = "dashboard", icon = icon("chart-line")),
-        menuItem("Upload data", tabName = "upload", icon = icon("upload"))
+        menuItem("Upload data", tabName = "upload", icon = icon("upload")),
+        menuItem("Calculator", tabName = "calculator", icon = icon("calculator"))
       )
       
     ),
@@ -38,6 +39,13 @@ app_ui <- function(request) {
         tabItem(tabName = "upload",
                 
                 mod_upload_data_ui("upload_data_ui_1")
+                
+        ),
+        
+        # Third tab content
+        tabItem(tabName = "calculator",
+                
+                mod_calculator_ui("calculator_ui_1")
                 
         )
       )

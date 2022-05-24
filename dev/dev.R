@@ -53,6 +53,7 @@ remotes::install_github("kristian-bak/kb.utils")
 
 ## Add module
 golem::add_module(name = "upload_data")
+golem::add_module(name = "calculator")
 
 ## Add NEWS
 usethis::use_news_md()

@@ -1,5 +1,8 @@
 # Betting 1.13.0
 
+* Changing exposure definition such that exposure is defined based on $\text{stake} > 0$
+* Adding smart stake calculator tab
+
 # Betting 1.12.0
 
 * Reducing number of columns in the output of loaded data

@@ -11,4 +11,6 @@ app_server <- function( input, output, session ) {
   
   data_init  <- mod_summary_server(id = "summary_ui_1", file_input = file_input)
   
+  mod_calculator_server("calculator_ui_1")
+  
 }
