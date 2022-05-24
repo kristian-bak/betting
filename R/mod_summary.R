@@ -70,7 +70,7 @@ mod_summary_ui <- function(id){
         inputId = ns("go_all_time"), 
         label = "All time", 
         style = 'padding:4px; font-size:89%'
-      )
+      ) 
     ),
     
     fluidRow(
@@ -120,6 +120,32 @@ mod_summary_ui <- function(id){
         )
       ),
       infoBoxOutput(outputId = ns("info_accuracy"), width = 3)
+    ),
+    
+    fluidPage(
+      column(
+        width = 1, 
+        offset = 8, 
+        shinyWidgets::dropdownButton(
+          h3("Inputs"),
+          shinyWidgets::materialSwitch(
+            inputId = ns("switch_lings_together"), 
+            label = "Group lings together", 
+            value = FALSE, 
+            status = "primary"
+          ), 
+          shinyWidgets::materialSwitch(
+            inputId = ns("switch_dbl_tp_as_lings"), 
+            label = "Group double and triple as lings", 
+            value = FALSE, 
+            status = "primary"
+          ),
+          circle = TRUE, 
+          size = "xs", 
+          status = "primary",
+          icon = icon("cog")
+        )
+      )
     ),
     
     fluidRow(
@@ -340,7 +366,14 @@ mod_summary_server <- function(id, file_input){
       
       data_tmp <- data_full %>% 
         dplyr::filter(MatchDay >= input$click_date[1], MatchDay <= input$click_date[2]) %>% 
-        dplyr::filter((Stake >= input$slide_stake[1] & Stake <= input$slide_stake[2]) | is.na(Stake))
+        dplyr::filter((Stake >= input$slide_stake[1] & Stake <= input$slide_stake[2]) | is.na(Stake)) %>% 
+        dplyr::mutate(
+          GameType = group_lings_together(x = GameType, group = input$switch_lings_together),
+          GameType = group_double_and_triple_as_lings(
+            x = GameType, 
+            group = input$switch_lings_together * input$switch_dbl_tp_as_lings
+          )
+        )
       
       if (!is.null(input$select_team)) {
         

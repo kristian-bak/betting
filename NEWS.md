@@ -1,3 +1,7 @@
+# Betting 1.14.0
+
+* Adding a `dropdownButton` which allows to group game types together
+
 # Betting 1.13.0
 
 * Changing exposure definition such that exposure is defined based on $\text{stake} > 0$
