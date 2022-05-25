@@ -50,6 +50,7 @@ usethis::use_package("kb.utils")
 usethis::use_package("htmltools")
 usethis::use_package("curl")
 usethis::use_package("shinyWidgets")
+usethis::use_package("glue")
 
 remotes::install_github("kristian-bak/kb.utils")
 

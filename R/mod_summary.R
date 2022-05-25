@@ -34,7 +34,7 @@ mod_summary_ui <- function(id){
         show_earning_panel(
           title = "Odds ranges", 
           outputId = ns("table_odds_group"),
-          p("Note: odds larger than 5 are placed in the interval (4, 5]")
+          p(glue::glue("Note: odds larger than {bound_odds} are placed in the last interval"))
         ),
         show_earning_panel(
           title = "Bets per match", 
@@ -43,7 +43,7 @@ mod_summary_ui <- function(id){
         show_earning_panel(
           title = "Stake", 
           outputId = ns("table_stake"),
-          p("Note: stake larger than 200 are placed in the interval (100, 200]")
+          p(glue::glue("Note: stake larger than {bound_stake} are placed in the last interval"))
         )
       )
     )
@@ -163,7 +163,7 @@ mod_summary_server <- function(id, data){
         dplyr::mutate(
           StakeMidpoint = kb.utils::cut_var(
             x = StakeMod, 
-            breaks = c(0, 25, 50, 75, 100, 200)
+            breaks = breaks_stake
           )
         ) %>% 
         dplyr::group_by(StakeGroup, StakeMidpoint) %>% 

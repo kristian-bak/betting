@@ -43,7 +43,7 @@ mod_filters_ui <- function(id){
              )
       ),
       column(1, 
-             show_dropdown_box(ns = ns),
+             show_dropdown_box(ns = ns, max_stake = max_stake),
              shinyBS::bsTooltip(
                id = ns("go_drop_down"), 
                title = "Additional filters", 
@@ -85,9 +85,27 @@ mod_filters_server <- function(id, input_file){
     
     data_init_load <- read_and_prep_data()
     
-    if (max(data_init_load$Stake, na.rm = TRUE) > 500) {
-      warning("sliderinput named slide_stake has max hardcoded as 500. Change this to a update statement")
-    }
+    max_stake <- reactive({
+      
+      current_max_stake <- get_max_stake(data = data())
+      
+      init_max_stake  <- get_max_stake(data = data_init_load)
+      
+      final_max_stake <- max(init_max_stake, current_max_stake)
+      
+      return(final_max_stake)
+      
+    })
+    
+    observe({
+      
+      updateSliderInput(
+        session = session, 
+        inputId = "slide_stake", 
+        max = max_stake()
+      )
+      
+    })
     
     observeEvent(input$go_this_year, {
       
@@ -169,7 +187,7 @@ mod_filters_server <- function(id, input_file){
       updateSliderInput(
         session = session, 
         inputId = "slide_stake", 
-        value = c(0, 500)
+        value = c(0, max_stake)
       )
       
     })
@@ -179,7 +197,12 @@ mod_filters_server <- function(id, input_file){
       if (!is.null(input_file())) {
         
         data_full <- input_file() %>% 
-          col_prep()
+          col_prep(
+            breaks_odds = breaks_odds, 
+            breaks_stake = breaks_stake, 
+            bound_odds = bound_odds, 
+            bound_stake = bound_stake
+          )
         
       } else {
         

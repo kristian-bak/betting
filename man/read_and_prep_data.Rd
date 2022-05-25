@@ -4,10 +4,21 @@
 \alias{read_and_prep_data}
 \title{Read and prep data}
 \usage{
-read_and_prep_data(breaks)
+read_and_prep_data(
+  breaks_odds = c(1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5),
+  breaks_stake = c(0, 25, 50, 75, 100, 200),
+  bound_odds = 5,
+  bound_stake = 200
+)
 }
 \arguments{
-\item{breaks}{breaks used to cut odds column (default is 12-dim sequence from 1 to 14.5)}
+\item{breaks_odds}{breaks used to cut odds column}
+
+\item{breaks_stake}{breaks used to cut stake column}
+
+\item{bound_odds}{integer specifying when to bound the odds column (all values above the bound will take the value `bound_odds`)}
+
+\item{bound_stake}{integer specifying when to bound the stake column (all values above the bound will take the value `bound_stake`)}
 }
 \description{
 Read and prep data

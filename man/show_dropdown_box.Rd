@@ -4,7 +4,12 @@
 \alias{show_dropdown_box}
 \title{Show dropdown box}
 \usage{
-show_dropdown_box(ns)
+show_dropdown_box(ns, max_stake)
+}
+\arguments{
+\item{ns}{namespace}
+
+\item{max_stake}{maximum stake (integer)}
 }
 \description{
 Show dropdown box

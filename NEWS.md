@@ -1,3 +1,9 @@
+# Betting 2.0.4
+
+* Generalizing the code related to cutpoints for odds and stake inputs
+* Generalizing the code related to text paragraphs
+* Adding dependency towards `{glue}`
+
 # Betting 2.0.3
 
 * Adding modules for plotting earnings and distributions

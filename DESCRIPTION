@@ -1,6 +1,6 @@
 Package: Betting
 Title: An Amazing Shiny App
-Version: 2.0.3
+Version: 2.0.4
 Authors@R: 
     person(given = "firstname",
            family = "lastname",
@@ -13,6 +13,7 @@ Imports:
     curl,
     dplyr,
     DT,
+    glue,
     golem (>= 0.3.1),
     htmltools,
     kb.utils,

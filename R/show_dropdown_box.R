@@ -1,6 +1,8 @@
 #' Show dropdown box
+#' @param ns namespace
+#' @param max_stake maximum stake (integer)
 #' 
-show_dropdown_box <- function(ns) {
+show_dropdown_box <- function(ns, max_stake) {
   
   shinyWidgets::dropdownButton(
     inputId = ns("go_drop_down"),
@@ -25,8 +27,8 @@ show_dropdown_box <- function(ns) {
           content = "Money in DKK placed on a bet"
         ), 
         min = 0, 
-        max = 500, 
-        value = c(0, 500), 
+        max = max_stake, 
+        value = c(0, max_stake), 
         step = 5, 
         dragRange = TRUE
       ),
