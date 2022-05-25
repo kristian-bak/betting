@@ -1,3 +1,7 @@
+# Betting 2.0.2
+
+* Adding hover on drop down button
+
 # Betting 2.0.1
 
 * Including `shinyWidgets` to dependency list

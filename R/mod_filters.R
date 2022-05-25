@@ -43,7 +43,12 @@ mod_filters_ui <- function(id){
              )
       ),
       column(1, 
-             show_dropdown_box(ns = ns)
+             show_dropdown_box(ns = ns),
+             shinyBS::bsTooltip(
+               id = ns("go_drop_down"), 
+               title = "Additional filters", 
+               placement = "right"
+             )
       )
     ),
     fluidRow(

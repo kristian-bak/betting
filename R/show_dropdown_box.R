@@ -3,6 +3,7 @@
 show_dropdown_box <- function(ns) {
   
   shinyWidgets::dropdownButton(
+    inputId = ns("go_drop_down"),
     circle = TRUE, 
     status = "primary", 
     icon = icon("cog"),
