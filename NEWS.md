@@ -1,3 +1,7 @@
+# Betting 2.0.3
+
+* Adding modules for plotting earnings and distributions
+
 # Betting 2.0.2
 
 * Adding hover on drop down button
