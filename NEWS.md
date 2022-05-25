@@ -1,3 +1,7 @@
+# Betting 2.0.1
+
+* Including `shinyWidgets` to dependency list
+
 # Betting 2.0.0
 
 * Initial split of summary module into multiple modules

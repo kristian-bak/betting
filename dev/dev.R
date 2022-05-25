@@ -49,6 +49,8 @@ usethis::use_package("plotly")
 usethis::use_package("kb.utils")
 usethis::use_package("htmltools")
 usethis::use_package("curl")
+usethis::use_package("shinyWidgets")
+
 remotes::install_github("kristian-bak/kb.utils")
 
 ## Add module
