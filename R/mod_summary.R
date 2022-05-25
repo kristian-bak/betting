@@ -46,62 +46,7 @@ mod_summary_ui <- function(id){
           p("Note: stake larger than 200 are placed in the interval (100, 200]")
         )
       )
-    ),
-    
-    fluidRow(
-      shinyjs::useShinyjs(),
-      column(3, 
-        shinyjs::hidden(
-          selectInput(
-            inputId = ns("select_yaxis1"), 
-            label = "Y axis 1", 
-            choices = c("Bets", "Stake", "Revenue", "Earnings", "Return"), 
-            selected = "Earnings"
-          )
-        )
-      ),
-      column(3, 
-        shinyjs::hidden(
-          selectizeInput(
-            inputId = ns("select_yaxis2"), 
-            label = "Y axis 2", 
-            choices = c("", "Bets", "Stake", "Revenue", "Earnings", "Return")
-          )
-        ) 
-      )
-    ),
-    
-    fluidRow(
-      
-      plotly::plotlyOutput(outputId = ns("plot_earnings"))
-      
-    ),
-    
-    fluidRow(
-      shinyjs::hidden(
-        tagList(
-          selectInput(
-            inputId = ns("select_covariate"), 
-            label = "Covariate", 
-            choices = c("Game", "GameType", "Odds", "Revenue", "Stake", "Tournament"),
-            width = "16.66667%"
-          )
-        )
-      )
-    ),
-    
-    fluidRow(
-      
-      verbatimTextOutput(outputId = ns("show_summary"))
-      
-    ),
-    
-    fluidRow(
-      
-      plotly::plotlyOutput(outputId = ns("plot_distribution"))
-      
     )
-    
   )
 }
     
@@ -234,36 +179,6 @@ mod_summary_server <- function(id, data){
     
     
     ## End of tables with earnings
-        
-    # Plot
-    plot_data <- reactive({
-      data() %>% 
-        dplyr::group_by(BetDay) %>% 
-        calculate_earnings() %>% 
-        accumulate_earnings()
-    })
-    
-    output$plot_earnings <- plotly::renderPlotly({
-      
-      plot_data() %>% 
-        plot_earnings(
-          y1 = input$select_yaxis1, 
-          y2 = input$select_yaxis2
-        )
-      
-    })
-    
-    observe({
-      if (is.data.frame(df_game_type())) {
-        
-        shinyjs::delay(ms = 0.1, expr = {
-          shinyjs::show(id = "select_yaxis1")
-          shinyjs::show(id = "select_yaxis2")
-          shinyjs::show(id = "select_covariate")
-        })
-        
-      }
-    })
     
     ## Show subset for game type - start
     react_game_type <- reactive({
@@ -478,35 +393,6 @@ mod_summary_server <- function(id, data){
     })
     
     ## Show subset for stake - end
-    
-    output$plot_distribution <- plotly::renderPlotly({
-      
-      data() %>% 
-        plot_distribution(var = input$select_covariate)
-      
-    })
-    
-    output$show_summary <- renderPrint({
-      
-      data() %>% 
-        dplyr::pull(input$select_covariate) %>% 
-        summarise_distribution()
-      
-    })
-    
-    observe({
-      
-      hide_distribution <- data() %>% 
-        dplyr::pull(input$select_covariate) %>% 
-        is.character()
-      
-      if (hide_distribution) {
-        shinyjs::hide(id = "show_summary")
-      } else {
-        shinyjs::show(id = "show_summary")
-      }
-      
-    })
  
   })
 }

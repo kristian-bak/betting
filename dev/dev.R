@@ -59,6 +59,8 @@ golem::add_module(name = "calculator")
 golem::add_module(name = "infobox")
 golem::add_module(name = "filters")
 golem::add_module(name = "dropdown_filters")
+golem::add_module(name = "plot_earnings")
+golem::add_module(name = "plot_distribution")
 
 ## Add NEWS
 usethis::use_news_md()

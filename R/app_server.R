@@ -15,6 +15,10 @@ app_server <- function( input, output, session ) {
   
   mod_summary_server(id = "summary_ui_1", data = data$data)
   
+  mod_plot_earnings_server("plot_earnings_ui_1", data = data$data)
+  
+  mod_plot_distribution_server("plot_distribution_ui_1", data = data$data)
+  
   mod_calculator_server("calculator_ui_1")
   
 }

@@ -33,7 +33,9 @@ app_ui <- function(request) {
                 
                 mod_filters_ui("filters_ui_1"),
                 mod_infobox_ui("infobox_ui_1"),
-                mod_summary_ui("summary_ui_1")
+                mod_summary_ui("summary_ui_1"),
+                mod_plot_earnings_ui("plot_earnings_ui_1"),
+                mod_plot_distribution_ui("plot_distribution_ui_1")
                 
                 
         ),

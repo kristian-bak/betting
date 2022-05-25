@@ -9,6 +9,12 @@
     ]
   },
   "Packages": {
+    "Betting": {
+      "Package": "Betting",
+      "Version": "1.6.0",
+      "Source": "unknown",
+      "Hash": "b41a07f868fcdb4b1d665d37242fbd89"
+    },
     "DT": {
       "Package": "DT",
       "Version": "0.22",
@@ -762,6 +768,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "e44255f073ecdc26ba6bc2ce3fcf174d"
+    },
+    "shinyWidgets": {
+      "Package": "shinyWidgets",
+      "Version": "0.6.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "02fba70d7c5c1ab0754d9c0108c029eb"
     },
     "shinydashboard": {
       "Package": "shinydashboard",
