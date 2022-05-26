@@ -44,6 +44,14 @@ mod_summary_ui <- function(id){
           title = "Stake", 
           outputId = ns("table_stake"),
           p(glue::glue("Note: stake larger than {bound_stake} are placed in the last interval"))
+        ),
+        show_earning_panel(
+          title = "Country", 
+          outputId = ns("table_country")
+        ),
+        show_earning_panel(
+          title = "Bookmaker", 
+          outputId = ns("table_bookmaker")
         )
       )
     )
@@ -62,9 +70,7 @@ mod_summary_server <- function(id, data){
     ## Bet type
     df_game_type <- reactive({
       data() %>% 
-        dplyr::group_by(GameType) %>% 
-        calculate_earnings() %>% 
-        dplyr::arrange(dplyr::desc(Bets))
+        calculate_earnings_grouped_by(GameType)
     })
     
     output$table_game_type <- DT::renderDataTable({
@@ -75,9 +81,7 @@ mod_summary_server <- function(id, data){
     ## Tournament
     df_tournament <- reactive({
       data() %>% 
-        dplyr::group_by(Tournament) %>% 
-        calculate_earnings() %>% 
-        dplyr::arrange(dplyr::desc(Bets))
+        calculate_earnings_grouped_by(Tournament)
     })
     
     output$table_tournament <- DT::renderDataTable({
@@ -88,20 +92,12 @@ mod_summary_server <- function(id, data){
     ## Team
     df_team_home <- reactive({
       data() %>% 
-        dplyr::filter(!is.na(HomeTeam)) %>% 
-        dplyr::group_by(HomeTeam) %>% 
-        calculate_earnings() %>% 
-        dplyr::arrange(dplyr::desc(Bets)) %>% 
-        dplyr::rename(Team = HomeTeam)
+        calculate_earnings_grouped_by_team(HomeTeam)
     })
     
     df_team_away <- reactive({
       data() %>% 
-        dplyr::filter(!is.na(AwayTeam)) %>% 
-        dplyr::group_by(AwayTeam) %>% 
-        calculate_earnings() %>% 
-        dplyr::arrange(dplyr::desc(Bets)) %>% 
-        dplyr::rename(Team = AwayTeam)
+        calculate_earnings_grouped_by_team(AwayTeam)
     })
     
     df_team_combined <- reactive({
@@ -120,10 +116,8 @@ mod_summary_server <- function(id, data){
     
     ## Oddset vs live betting
     df_game <- reactive({
-      data() %>% 
-        dplyr::group_by(Game) %>% 
-        calculate_earnings() %>% 
-        dplyr::arrange(dplyr::desc(Bets))
+      data() %>%
+        calculate_earnings_grouped_by(Game)
     })
     
     output$table_game <- DT::renderDataTable({
@@ -134,8 +128,7 @@ mod_summary_server <- function(id, data){
     ## Odds range
     df_odds_group <- reactive({
       data() %>% 
-        dplyr::group_by(OddsGroup) %>% 
-        calculate_earnings() %>%
+        calculate_earnings_grouped_by(OddsGroup) %>% 
         arrange_by_odds_group()
     })
     
@@ -159,17 +152,7 @@ mod_summary_server <- function(id, data){
     df_stake <- reactive({
       
       data() %>% 
-        dplyr::filter(Stake > 0) %>% 
-        dplyr::mutate(
-          StakeMidpoint = kb.utils::cut_var(
-            x = StakeMod, 
-            breaks = breaks_stake
-          )
-        ) %>% 
-        dplyr::group_by(StakeGroup, StakeMidpoint) %>% 
-        calculate_earnings() %>% 
-        dplyr::arrange(StakeMidpoint) %>% 
-        dplyr::select(-StakeMidpoint)
+        calculate_earnings_grouped_by_stake()
     })
     
     output$table_stake <- DT::renderDataTable({
@@ -177,6 +160,29 @@ mod_summary_server <- function(id, data){
         color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
     
+    ## Country
+    df_country <- reactive({
+      
+      data() %>% 
+        calculate_earnings_grouped_by(Country)
+    })
+    
+    output$table_country <- DT::renderDataTable({
+      DT::datatable(df_country(), selection = "single") %>% 
+        color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
+    })
+    
+    ## Bookmaker
+    df_bookmaker <- reactive({
+      
+      data() %>% 
+        calculate_earnings_grouped_by(Bookmaker)
+    })
+    
+    output$table_bookmaker <- DT::renderDataTable({
+      DT::datatable(df_bookmaker(), selection = "single") %>% 
+        color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
+    })
     
     ## End of tables with earnings
     
@@ -219,8 +225,7 @@ mod_summary_server <- function(id, data){
     react_tournament <- reactive({
       
       df_tournament() %>% 
-        dplyr::slice(input$table_tournament_rows_selected) %>% 
-        dplyr::pull(Tournament)
+        slice_and_pull(i = input$table_tournament_rows_selected, j = Tournament)
       
     })
     
@@ -247,8 +252,7 @@ mod_summary_server <- function(id, data){
     react_team <- reactive({
       
       df_team_combined() %>% 
-        dplyr::slice(input$table_team_rows_selected) %>% 
-        dplyr::pull(Team)
+        slice_and_pull(i = input$table_team_rows_selected, j = Team)
       
     })
     
@@ -280,8 +284,7 @@ mod_summary_server <- function(id, data){
     react_game <- reactive({
       
       df_game() %>% 
-        dplyr::slice(input$table_game_rows_selected) %>% 
-        dplyr::pull(Game)
+        slice_and_pull(i = input$table_game_rows_selected, j = Game)
       
     })
     
@@ -308,8 +311,7 @@ mod_summary_server <- function(id, data){
     react_odds_group <- reactive({
       
       df_odds_group() %>% 
-        dplyr::slice(input$table_odds_group_rows_selected) %>% 
-        dplyr::pull(OddsGroup)
+        slice_and_pull(i = input$table_odds_group_rows_selected, j = OddsGroup)
       
     })
     
@@ -338,8 +340,7 @@ mod_summary_server <- function(id, data){
     react_bets <- reactive({
       
       df_bets() %>% 
-        dplyr::slice(input$table_bets_rows_selected) %>% 
-        dplyr::pull(BetsInGame)
+        slice_and_pull(i = input$table_bets_rows_selected, j = BetsInGame)
       
     })
     
@@ -368,8 +369,7 @@ mod_summary_server <- function(id, data){
     react_stake <- reactive({
       
       df_stake() %>% 
-        dplyr::slice(input$table_stake_rows_selected) %>% 
-        dplyr::pull(StakeGroup)
+        slice_and_pull(i = input$table_stake_rows_selected, j = StakeGroup)
       
     })
     
@@ -393,6 +393,64 @@ mod_summary_server <- function(id, data){
     })
     
     ## Show subset for stake - end
+    
+    ## Show subset for country - start
+    react_country <- reactive({
+      
+      df_country() %>% 
+        slice_and_pull(i = input$table_country_rows_selected, j = Country)
+      
+    })
+    
+    output$table_country_subset <- DT::renderDataTable({
+      
+      DT::datatable(get_selected_subset(data = data(), Country == react_country()))
+      
+    })
+    
+    observeEvent(input$table_country_rows_selected, {
+      
+      showModal(
+        ui = modalDialog(
+          DT::dataTableOutput(outputId = ns("table_country_subset")), 
+          size = "l", 
+          easyClose = TRUE
+        ), 
+        session = session
+      )
+      
+    })
+    
+    ## Show subset for country - end
+    
+    ## Show subset for bookmaker - start
+    react_bookmaker <- reactive({
+      
+      df_bookmaker() %>% 
+        slice_and_pull(i = input$table_bookmaker_rows_selected, j = Bookmaker)
+      
+    })
+    
+    output$table_bookmaker_subset <- DT::renderDataTable({
+      
+      DT::datatable(get_selected_subset(data = data(), Bookmaker == react_bookmaker()))
+      
+    })
+    
+    observeEvent(input$table_bookmaker_rows_selected, {
+      
+      showModal(
+        ui = modalDialog(
+          DT::dataTableOutput(outputId = ns("table_bookmaker_subset")), 
+          size = "l", 
+          easyClose = TRUE
+        ), 
+        session = session
+      )
+      
+    })
+    
+    ## Show subset for bookmaker - end
  
   })
 }

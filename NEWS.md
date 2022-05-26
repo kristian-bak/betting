@@ -1,3 +1,13 @@
+# Betting 2.1.0
+
+* Adding earnings tab for country and bookmaker
+* Adding filter options for country and bookmaker
+* Refactoring server code in filter module such that copy pasted code is replaced a function used multiple times
+
+# Betting 2.0.5
+
+* Adjusting input validation such that more flexible datasets are allowed
+
 # Betting 2.0.4
 
 * Generalizing the code related to cutpoints for odds and stake inputs

@@ -249,6 +249,20 @@ mod_filters_server <- function(id, input_file){
         
       }
       
+      if (!is.null(input$select_country)) {
+        
+        data_tmp <- data_tmp %>% 
+          dplyr::filter(Country %in% input$select_country)
+        
+      }
+      
+      if (!is.null(input$select_bookmaker)) {
+        
+        data_tmp <- data_tmp %>% 
+          dplyr::filter(Bookmaker %in% input$select_bookmaker)
+        
+      }
+      
       return(data_tmp)
       
     })
@@ -284,6 +298,34 @@ mod_filters_server <- function(id, input_file){
           session = session, 
           inputId = "select_tournament", 
           choices = c("", get_tournament_names(data = data()))
+        )
+      }
+      
+    })
+    
+    observe({
+      
+      if (is.null(input$select_country)) {
+        updateSelectizeInput(
+          session = session, 
+          inputId = "select_country", 
+          choices = c("", get_selectize_choices(data = data(), x = Country))
+        )
+      }
+      
+    })
+    
+    observe({
+      
+      if (input$select_game != "") {
+        return()
+      }
+      
+      if (is.null(input$select_bookmaker)) {
+        updateSelectizeInput(
+          session = session, 
+          inputId = "select_bookmaker", 
+          choices = c("", get_selectize_choices(data = data(), x = Bookmaker))
         )
       }
       

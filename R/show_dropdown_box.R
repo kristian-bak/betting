@@ -46,6 +46,24 @@ show_dropdown_box <- function(ns, max_stake) {
         label = "Live betting vs oddset", 
         choices = c("", "Live Betting", "Oddset")
       ),
+      selectizeInput(
+        inputId = ns("select_country"), 
+        label = "Country", 
+        choices = NULL,
+        multiple = TRUE,
+        options = list(
+          'plugins' = list('remove_button')
+        )
+      ),
+      selectizeInput(
+        inputId = ns("select_bookmaker"), 
+        label = "Bookmaker", 
+        choices = NULL,
+        multiple = TRUE,
+        options = list(
+          'plugins' = list('remove_button')
+        )
+      ),
       shinyWidgets::materialSwitch(
         inputId = ns("switch_lings_together"), 
         label = "Group lings together", 

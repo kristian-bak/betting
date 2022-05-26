@@ -51,10 +51,11 @@ mod_upload_data_server <- function(id, data_init){
       
       cols_present <- cols_expected %in% names(react_var$data_uploaded)
       
-      typeof_vec <- sapply(react_var$data_uploaded, typeof)
+      typeof_vec <- sapply(react_var$data_uploaded %>% 
+                             dplyr::select(cols_expected), typeof)
       
-      typeof_expected <- c("double", "double", "character", "character", "character", "character", 
-                           "double", "double", "double", "double", "character")
+      typeof_expected <- c("double", "double", "character", "character", "character",
+                           "character", "double", "double", "double", "double", "character")
       
       typeof_matching <- typeof_vec == typeof_expected
       
