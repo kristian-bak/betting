@@ -1,3 +1,7 @@
+# Betting 2.2.0
+
+* Adding earnings tab for days betwen betday and matchday
+
 # Betting 2.1.0
 
 * Adding earnings tab for country and bookmaker

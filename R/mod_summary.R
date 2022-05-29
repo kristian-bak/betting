@@ -52,6 +52,11 @@ mod_summary_ui <- function(id){
         show_earning_panel(
           title = "Bookmaker", 
           outputId = ns("table_bookmaker")
+        ),
+        show_earning_panel(
+          title = "BetDay vs MatchDay", 
+          outputId = ns("table_days"),
+          p("Clarification: DaysDiff > 0 means the bet was made at least one day before the match day")
         )
       )
     )
@@ -181,6 +186,20 @@ mod_summary_server <- function(id, data){
     
     output$table_bookmaker <- DT::renderDataTable({
       DT::datatable(df_bookmaker(), selection = "single") %>% 
+        color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
+    })
+    
+    ## Days between BetDay and MatchDay
+    df_days <- reactive({
+      
+      data() %>% 
+        calculate_earnings_grouped_by(DaysDiff) %>% 
+        dplyr::filter(Bets > 0)
+      
+    })
+    
+    output$table_days <- DT::renderDataTable({
+      DT::datatable(df_days(), selection = "single") %>% 
         color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
     
@@ -451,6 +470,35 @@ mod_summary_server <- function(id, data){
     })
     
     ## Show subset for bookmaker - end
+    
+    ## Show subset for Days - start
+    react_days <- reactive({
+      
+      df_days() %>% 
+        slice_and_pull(i = input$table_days_rows_selected, j = DaysDiff)
+      
+    })
+    
+    output$table_days_subset <- DT::renderDataTable({
+      
+      DT::datatable(get_selected_subset(data = data(), DaysDiff == react_days()))
+      
+    })
+    
+    observeEvent(input$table_days_rows_selected, {
+      
+      showModal(
+        ui = modalDialog(
+          DT::dataTableOutput(outputId = ns("table_days_subset")), 
+          size = "l", 
+          easyClose = TRUE
+        ), 
+        session = session
+      )
+      
+    })
+    
+    ## Show subset for Days - end
  
   })
 }

@@ -19,7 +19,7 @@ get_selected_subset <- function(data, ..., var = "", value = "") {
   df_tmp %>% 
     dplyr::select(-BetDay, -HomeTeam, -AwayTeam, -OddsGroup, 
                   -OddsMod, -StakeGroup, -StakeMod, -ID, -GameType, 
-                  -Country, -Freebet, -Bookmaker) %>% 
+                  -Country, -Freebet, -Bookmaker, -DaysDiff) %>% 
     dplyr::rename(Tourn = Tournament) %>% 
     dplyr::mutate(Tourn = short_tournament_name(Tourn))
   
