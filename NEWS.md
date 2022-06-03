@@ -1,3 +1,8 @@
+# Betting 2.3.0
+
+* Adding calculation of stressed earnings 
+* Updating unit tests such that they reflect stressed calculations as well
+
 # Betting 2.2.0
 
 * Adding earnings tab for days betwen betday and matchday

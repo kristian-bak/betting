@@ -40,7 +40,7 @@ calculate_earnings <- function(data, var_bets = NULL, var_stake = "Stake", var_r
                      Earnings = round(Revenue - Stake, 0), 
                      Return = ifelse(Stake == 0, 0, round(100 * (Earnings / Stake), 1)), 
                      .groups = "drop") %>% 
-    dplyr::rename_with(.cols = var_rename, 
+    dplyr::rename_with(.cols = dplyr::all_of(var_rename), 
                        .fn = ~paste0(.x, "*"))
   
   ## If str_joining_var == "Bets", then no grouping has been applied, meaning both
