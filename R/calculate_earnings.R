@@ -12,11 +12,13 @@ calculate_earnings <- function(data, var_bets = NULL, var_stake = "Stake", var_r
   
   df_earnings <- data_tmp %>% 
     dplyr::summarise(Bets = if (is.null(var_bets)) sum(Exposure) else sum(get(var_bets)),
+                     MedianOdds = median(Odds),
                      Stake = round(sum(get(var_stake), na.rm = TRUE), 0),
                      Accuracy = round(100 * sum(Correct * Exposure) / sum(Exposure), 2),
                      Revenue = round(sum(get(var_revenue), na.rm = TRUE), 0), 
                      Earnings = round(Revenue - Stake, 0), 
                      Return = ifelse(Stake == 0, 0, round(100 * (Earnings / Stake), 1)), 
+                     ExpReturn = return_in_pct(x = MedianOdds * (Accuracy / 100)),
                      .groups = "drop")
   
   str_joining_var <- names(df_earnings)[1]

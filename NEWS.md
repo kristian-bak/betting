@@ -1,3 +1,7 @@
+# Betting 2.4.0
+
+* Adding median odds to earning table
+
 # Betting 2.3.0
 
 * Adding calculation of stressed earnings 
