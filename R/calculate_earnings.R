@@ -53,8 +53,15 @@ calculate_earnings <- function(data, var_bets = NULL, var_stake = "Stake", var_r
       df_earnings_stress %>% dplyr::rename(`Bets*` = Bets)
     )
   } else {
+    
+    stress_names <- names(df_earnings_stress) 
+    
+    unique_names <- stress_names[!stress_names %in% names(df_earnings)]
+    
+    unique_vars <- c(unique_names, str_joining_var)
+    
     df_out <- df_earnings %>% 
-      dplyr::full_join(df_earnings_stress, by = str_joining_var)
+      dplyr::full_join(df_earnings_stress %>% dplyr::select(unique_vars), by = str_joining_var)
   }
   
 

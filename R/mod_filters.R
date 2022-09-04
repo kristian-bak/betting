@@ -68,6 +68,21 @@ mod_filters_ui <- function(id){
         style = 'padding:4px; font-size:89%'
       ),
       actionButton(
+        inputId = ns("go_s2021"), 
+        label = "Season 2021", 
+        style = 'padding:4px; font-size:89%'
+      ),
+      actionButton(
+        inputId = ns("go_s2122"), 
+        label = "Season 2122", 
+        style = 'padding:4px; font-size:89%'
+      ),
+      actionButton(
+        inputId = ns("go_s2223"), 
+        label = "Season 2223", 
+        style = 'padding:4px; font-size:89%'
+      ),
+      actionButton(
         inputId = ns("go_all_time"), 
         label = "All time", 
         style = 'padding:4px; font-size:89%'
@@ -147,6 +162,39 @@ mod_filters_server <- function(id, input_file){
         inputId = "click_date", 
         start = three_months_ago(), 
         end = Sys.Date()
+      )
+      
+    })
+    
+    observeEvent(input$go_s2021, {
+      
+      updateDateRangeInput(
+        session = session, 
+        inputId = "click_date", 
+        start = season_2021_start(), 
+        end = season_2021_end()
+      )
+      
+    })
+    
+    observeEvent(input$go_s2122, {
+      
+      updateDateRangeInput(
+        session = session, 
+        inputId = "click_date", 
+        start = season_2122_start(), 
+        end = season_2122_end()
+      )
+      
+    })
+    
+    observeEvent(input$go_s2223, {
+      
+      updateDateRangeInput(
+        session = session, 
+        inputId = "click_date", 
+        start = season_2223_start(), 
+        end = season_2223_end()
       )
       
     })

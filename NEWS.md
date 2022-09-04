@@ -1,3 +1,8 @@
+# Betting 2.4.1
+
+* Fixing bug in stake tab related to full join with non-unique column names
+* Allowing NA values in Bookmaker column
+
 # Betting 2.4.0
 
 * Adding median odds to earning table
