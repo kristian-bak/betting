@@ -19,14 +19,15 @@ calculate_earnings <- function(data, var_bets = NULL, var_stake = "Stake", var_r
                      Earnings = round(Revenue - Stake, 0), 
                      Return = ifelse(Stake == 0, 0, round(100 * (Earnings / Stake), 1)), 
                      ExpReturn = return_in_pct(x = MedianOdds * (Accuracy / 100)),
-                     .groups = "drop")
+                     .groups = "drop") %>% 
+    add_stake_limit()
   
-  str_joining_var <- names(df_earnings)[1]
+  str_joining_var <- names(df_earnings)[1] ## GameType if grouped by GameType
   
-  if (str_joining_var == "Bets") {
-    var_rename <- c("Stake", "Accuracy", "Revenue", "Earnings", "Return")
+  if (str_joining_var == "Bets") { ## No grouping (i.e. calculate earnings on all data)
+    var_rename <- c("Stake", "StakeLimit", "NextLvl", "MedianOdds", "Accuracy", "Revenue", "Earnings", "Return", "ExpReturn")
   } else {
-    var_rename <- c("Bets", "Stake", "Accuracy", "Revenue", "Earnings", "Return")
+    var_rename <- c("Bets", "StakeLimit", "NextLvl", "MedianOdds", "Stake", "Accuracy", "Revenue", "Earnings", "Return", "ExpReturn")
   }
   
   ## Earnings from freebets are removed in stressed calculations and top 1 % earnings are removed as well
@@ -36,12 +37,15 @@ calculate_earnings <- function(data, var_bets = NULL, var_stake = "Stake", var_r
                   EarningsQ99 = quantile(Earnings, probs = 0.99, na.rm = TRUE)) %>%
     dplyr::filter(Earnings < EarningsQ99) %>% 
     dplyr::summarise(Bets = if (is.null(var_bets)) sum(Exposure) else sum(get(var_bets)),
+                     MedianOdds = median(Odds),
                      Stake = round(sum(get(var_stake), na.rm = TRUE), 0),
                      Accuracy = round(100 * sum(Correct * Exposure) / sum(Exposure), 2),
                      Revenue = round(sum(get(var_revenue), na.rm = TRUE), 0), 
                      Earnings = round(Revenue - Stake, 0), 
-                     Return = ifelse(Stake == 0, 0, round(100 * (Earnings / Stake), 1)), 
+                     Return = ifelse(Stake == 0, 0, round(100 * (Earnings / Stake), 1)),
+                     ExpReturn = return_in_pct(x = MedianOdds * (Accuracy / 100)),
                      .groups = "drop") %>% 
+    add_stake_limit() %>% 
     dplyr::rename_with(.cols = dplyr::all_of(var_rename), 
                        .fn = ~paste0(.x, "*"))
   
@@ -54,6 +58,7 @@ calculate_earnings <- function(data, var_bets = NULL, var_stake = "Stake", var_r
     )
   } else {
     
+    ## Ensure only unique columns are added to the join
     stress_names <- names(df_earnings_stress) 
     
     unique_names <- stress_names[!stress_names %in% names(df_earnings)]
@@ -63,8 +68,6 @@ calculate_earnings <- function(data, var_bets = NULL, var_stake = "Stake", var_r
     df_out <- df_earnings %>% 
       dplyr::full_join(df_earnings_stress %>% dplyr::select(unique_vars), by = str_joining_var)
   }
-  
-
   
   return(df_out)
     

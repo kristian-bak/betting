@@ -14,6 +14,13 @@ mod_summary_ui <- function(id){
     
     fluidRow(
       
+      shinyWidgets::materialSwitch(
+        inputId = ns("switch_stress"), 
+        label = "Stress", 
+        value = FALSE,
+        status = "primary"
+      ),
+      
       tabsetPanel(
         show_earning_panel(
           title = "Bet type", 
@@ -74,8 +81,10 @@ mod_summary_server <- function(id, data){
     
     ## Bet type
     df_game_type <- reactive({
+      
       data() %>% 
-        calculate_earnings_grouped_by(GameType)
+        calculate_earnings_grouped_by(GameType) %>% 
+        select_stress(stress = input$switch_stress)
     })
     
     output$table_game_type <- DT::renderDataTable({
@@ -86,7 +95,8 @@ mod_summary_server <- function(id, data){
     ## Tournament
     df_tournament <- reactive({
       data() %>% 
-        calculate_earnings_grouped_by(Tournament)
+        calculate_earnings_grouped_by(Tournament) %>% 
+        select_stress(stress = input$switch_stress)
     })
     
     output$table_tournament <- DT::renderDataTable({
@@ -97,12 +107,14 @@ mod_summary_server <- function(id, data){
     ## Team
     df_team_home <- reactive({
       data() %>% 
-        calculate_earnings_grouped_by_team(HomeTeam)
+        calculate_earnings_grouped_by_team(HomeTeam) %>% 
+        select_stress(stress = input$switch_stress)
     })
     
     df_team_away <- reactive({
       data() %>% 
-        calculate_earnings_grouped_by_team(AwayTeam)
+        calculate_earnings_grouped_by_team(AwayTeam) %>% 
+        select_stress(stress = input$switch_stress)
     })
     
     df_team_combined <- reactive({
@@ -122,7 +134,8 @@ mod_summary_server <- function(id, data){
     ## Oddset vs live betting
     df_game <- reactive({
       data() %>%
-        calculate_earnings_grouped_by(Game)
+        calculate_earnings_grouped_by(Game) %>% 
+        select_stress(stress = input$switch_stress)
     })
     
     output$table_game <- DT::renderDataTable({
@@ -134,7 +147,8 @@ mod_summary_server <- function(id, data){
     df_odds_group <- reactive({
       data() %>% 
         calculate_earnings_grouped_by(OddsGroup) %>% 
-        arrange_by_odds_group()
+        arrange_by_odds_group() %>% 
+        select_stress(stress = input$switch_stress)
     })
     
     output$table_odds_group <- DT::renderDataTable({
@@ -157,7 +171,8 @@ mod_summary_server <- function(id, data){
     df_stake <- reactive({
       
       data() %>% 
-        calculate_earnings_grouped_by_stake()
+        calculate_earnings_grouped_by_stake() %>% 
+        select_stress(stress = input$switch_stress)
     })
     
     output$table_stake <- DT::renderDataTable({
@@ -169,7 +184,8 @@ mod_summary_server <- function(id, data){
     df_country <- reactive({
       
       data() %>% 
-        calculate_earnings_grouped_by(Country)
+        calculate_earnings_grouped_by(Country) %>% 
+        select_stress(stress = input$switch_stress)
     })
     
     output$table_country <- DT::renderDataTable({
@@ -181,7 +197,8 @@ mod_summary_server <- function(id, data){
     df_bookmaker <- reactive({
       
       data() %>% 
-        calculate_earnings_grouped_by(Bookmaker)
+        calculate_earnings_grouped_by(Bookmaker) %>% 
+        select_stress(stress = input$switch_stress)
     })
     
     output$table_bookmaker <- DT::renderDataTable({
@@ -194,7 +211,8 @@ mod_summary_server <- function(id, data){
       
       data() %>% 
         calculate_earnings_grouped_by(DaysDiff) %>% 
-        dplyr::filter(Bets > 0)
+        dplyr::filter(Bets > 0) %>% 
+        select_stress(stress = input$switch_stress)
       
     })
     

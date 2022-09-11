@@ -4,7 +4,7 @@
 \alias{color_by}
 \title{Color by}
 \usage{
-color_by(data, var, colors)
+color_by(data, var, colors, na.rm = TRUE)
 }
 \arguments{
 \item{data}{DT::datatable object}
@@ -12,6 +12,8 @@ color_by(data, var, colors)
 \item{var}{character string with column name to color}
 
 \item{colors}{vector of colors to use}
+
+\item{na.rm}{whether NA values should be removed (default is FALSE)}
 }
 \description{
 Color by

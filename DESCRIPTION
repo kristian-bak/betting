@@ -1,6 +1,6 @@
 Package: Betting
 Title: An Amazing Shiny App
-Version: 2.4.1
+Version: 2.5.0
 Authors@R: 
     person(given = "firstname",
            family = "lastname",

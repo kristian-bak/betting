@@ -2,13 +2,14 @@
 #' @param data DT::datatable object
 #' @param var character string with column name to color
 #' @param colors vector of colors to use
-#' 
-color_by <- function(data, var, colors) {
+#' @param na.rm whether NA values should be removed (default is FALSE)
+color_by <- function(data, var, colors, na.rm = TRUE) {
   
   df <- data$x$data
   
   breaks <- df %>% 
     dplyr::pull(var) %>% 
+    {if (na.rm) magrittr::extract(!is.na(.)) else .} %>% 
     quantile(probs = seq(from = 0, to = 1, by = 0.1))
   
   color_range <- grDevices::colorRampPalette(colors = colors)

@@ -1,3 +1,7 @@
+# Betting 2.5.0
+
+* Reducing number of columns in earnings summary by adding stress switch (All tabs but Bets per match)
+
 # Betting 2.4.1
 
 * Fixing bug in stake tab related to full join with non-unique column names
