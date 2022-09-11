@@ -11,25 +11,34 @@ mod_plot_earnings_ui <- function(id){
   ns <- NS(id)
   
   tagList(
+
+    fluidRow(
+      
+      plotly::plotlyOutput(outputId = ns("plot_return"))
+      
+    ),
+    
+    htmltools::br(),
+    
     fluidRow(
       column(3, 
-        shinyjs::hidden(
-          selectInput(
-            inputId = ns("select_yaxis1"), 
-            label = "Y axis 1", 
-            choices = c("Bets", "Stake", "Revenue", "Earnings", "Return"), 
-            selected = "Earnings"
-          )
-        )
+             shinyjs::hidden(
+               selectInput(
+                 inputId = ns("select_yaxis1"), 
+                 label = "Y axis 1", 
+                 choices = c("Bets", "Stake", "Revenue", "Earnings", "Return"), 
+                 selected = "Earnings"
+               )
+             )
       ),
       column(3, 
-        shinyjs::hidden(
-          selectizeInput(
-            inputId = ns("select_yaxis2"), 
-            label = "Y axis 2", 
-            choices = c("", "Bets", "Stake", "Revenue", "Earnings", "Return")
-          )
-        )
+             shinyjs::hidden(
+               selectizeInput(
+                 inputId = ns("select_yaxis2"), 
+                 label = "Y axis 2", 
+                 choices = c("", "Bets", "Stake", "Revenue", "Earnings", "Return")
+               )
+             )
       )
     ),
     
@@ -55,6 +64,25 @@ mod_plot_earnings_server <- function(id, data){
         dplyr::group_by(BetDay) %>% 
         calculate_earnings() %>% 
         accumulate_earnings()
+    })
+    
+    plot_data_return <- reactive({
+      data() %>% 
+        dplyr::mutate(Year = substring(BetDay, 1, 4),
+                      Month = substring(BetDay, 1, 7), 
+                      Week = data.table::week(BetDay)) %>% 
+        dplyr::group_by(Month) %>% 
+        calculate_earnings() %>% 
+        select_stress(stress = FALSE)
+    })
+    
+    output$plot_return <- plotly::renderPlotly({
+      
+      plot_data_return() %>% 
+        plot_return(
+          x = "Month"
+        )
+      
     })
     
     output$plot_earnings <- plotly::renderPlotly({

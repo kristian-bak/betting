@@ -14,7 +14,9 @@
 #' 
 plotly_double_yaxis <- function(data, type, mode, x, yaxis1, yaxis2, legend1, legend2, xaxis_title, yaxis1_title, yaxis2_title, main_title) {
   
-  fig <- plotly::plot_ly(data = data, x = ~get(x), y = ~get(yaxis1), name = legend1, mode = mode, type = type) %>% 
+  fig <- plotly::plot_ly(
+    data = data, x = ~get(x), y = ~get(yaxis1), name = legend1, 
+    mode = mode, type = type, line = list(color = "#408cbc")) %>% 
     plotly::layout(title = main_title, 
                    xaxis = list(title = xaxis_title),
                    yaxis = list(title = yaxis1_title))
@@ -30,7 +32,8 @@ plotly_double_yaxis <- function(data, type, mode, x, yaxis1, yaxis2, legend1, le
       )
       
       fig <- fig %>% 
-        plotly::add_trace(y = ~get(yaxis2), name = legend2, yaxis = "y2", mode = mode, type = type) %>% 
+        plotly::add_trace(y = ~get(yaxis2), name = legend2, yaxis = "y2", 
+                          line = list(color = "#08c4ec"), mode = mode, type = type) %>% 
         plotly::layout(yaxis2 = ay) 
       
     }

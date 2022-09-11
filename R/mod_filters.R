@@ -15,8 +15,8 @@ mod_filters_ui <- function(id){
         dateRangeInput(
           inputId = ns("click_date"), 
           label = "Period", 
-          start = start_of_this_year(), 
-          end = Sys.Date(), 
+          start = season_2223_start(), 
+          end = season_2223_end(), 
           weekstart = 1
         )
       ),
@@ -204,8 +204,8 @@ mod_filters_server <- function(id, input_file){
       updateDateRangeInput(
         session = session, 
         inputId = "click_date", 
-        start = start_of_this_year(), 
-        end = Sys.Date()
+        start = season_2223_start(), 
+        end = season_2223_end()
       )
       
       updateSelectizeInput(

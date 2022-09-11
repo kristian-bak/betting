@@ -11,9 +11,9 @@ app_server <- function( input, output, session ) {
 
   data <- mod_filters_server("filters_ui_1", input_file = input_file)
   
-  mod_infobox_server("infobox_ui_1", data = data$data)
+  stress <- mod_summary_server(id = "summary_ui_1", data = data$data)
   
-  mod_summary_server(id = "summary_ui_1", data = data$data)
+  mod_infobox_server("infobox_ui_1", data = data$data, stress = stress)
   
   mod_plot_earnings_server("plot_earnings_ui_1", data = data$data)
   

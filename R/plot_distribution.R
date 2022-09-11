@@ -18,7 +18,9 @@ plot_distribution <- function(data, var) {
   }
   
   plot_data %>% 
-    plotly::plot_ly(x = ~get(var), type = "histogram") %>% 
+    plotly::plot_ly(x = ~get(var), type = "histogram",
+                    marker = list(color = "#408cbc",
+                                  line = list(color = "#408cbc"))) %>% 
     plotly::layout(xaxis = list(title = var), 
                    yaxis = list(title = "Counts"),
                    title = "Histogram of covariate")

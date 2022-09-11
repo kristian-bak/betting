@@ -1,3 +1,7 @@
+# Betting 2.6.0
+
+* Color adjustment and stressing earnings for all data
+
 # Betting 2.5.0
 
 * Reducing number of columns in earnings summary by adding stress switch (All tabs but Bets per match)

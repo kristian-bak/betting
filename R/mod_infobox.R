@@ -28,7 +28,7 @@ mod_infobox_ui <- function(id){
 #' infobox Server Functions
 #'
 #' @noRd 
-mod_infobox_server <- function(id, data){
+mod_infobox_server <- function(id, data, stress){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
@@ -60,8 +60,10 @@ mod_infobox_server <- function(id, data){
     })
     
     df_info <- reactive({
+      
       data() %>% 
         calculate_earnings() %>% 
+        select_stress(stress()) %>% 
         dplyr::arrange(dplyr::desc(Bets))
     })
     

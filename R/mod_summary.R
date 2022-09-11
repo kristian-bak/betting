@@ -517,6 +517,8 @@ mod_summary_server <- function(id, data){
     })
     
     ## Show subset for Days - end
+    
+    return(reactive(input$switch_stress))
  
   })
 }
