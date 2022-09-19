@@ -17,7 +17,10 @@ col_prep <- function(data, breaks_odds, breaks_stake, bound_odds, bound_stake) {
                   StakeGroup = cut(StakeMod, breaks = breaks_stake, include.lowest = TRUE) %>% as.character(), 
                   ID         = dplyr::row_number() %>% rev(), 
                   DaysDiff   = difftime(MatchDay, BetDay, units = "d") %>% as.numeric(), 
-                  Bookmaker  = dplyr::if_else(is.na(Bookmaker), "Danske Spil", Bookmaker))
+                  Bookmaker  = dplyr::if_else(is.na(Bookmaker), "Danske Spil", Bookmaker), 
+                  Year = substring(BetDay, 1, 4),
+                  Month = substring(BetDay, 1, 7), 
+                  Week = paste0(Year, "-", data.table::week(BetDay)))
   
   df_count_bets <- data_tmp %>% 
     dplyr::mutate(ExposureBets = dplyr::if_else(is.na(Revenue) | is.na(Match), 0, 1)) %>% 

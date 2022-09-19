@@ -24,16 +24,17 @@ plot_earnings <- function(data, y1, y2) {
 
 #' Plot return
 #' @param data tibble with earnings
-#' @param x character string with column name to plot returns for
-
-plot_return <- function(data, x) {
+#' @param x character string with column name to plot on x axis
+#' @param y character string with column name to plot on y axis
+plot_return <- function(data, x, y) {
   
   data %>% 
     dplyr::mutate(Win = dplyr::if_else(Return >= 0, "Win", "Loss")) %>% 
     plotly::plot_ly() %>% 
-    plotly::add_bars(x = ~get(x), y = ~Return, color = ~Win, colors = c("#FFC3B8", "#C3F5C3")) %>% 
+    plotly::add_bars(x = ~get(x), y = ~get(y), color = ~Win, colors = c("#FFC3B8", "#C3F5C3")) %>% 
     plotly::layout(showlegend = FALSE, 
                    xaxis = list(title = x), 
-                   title = "Monthly return")
+                   yaxis = list(title = y),
+                   title = paste0(x, "ly", " ", y))
   
 }

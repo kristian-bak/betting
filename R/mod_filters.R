@@ -98,7 +98,7 @@ mod_filters_server <- function(id, input_file){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
-    data_init_load <- read_and_prep_data()
+    data_init_load <- read_and_prep_data(breaks_odds = breaks_odds, breaks_stake = breaks_stake)
     
     max_stake <- reactive({
       

@@ -4,12 +4,14 @@
 \alias{plot_return}
 \title{Plot return}
 \usage{
-plot_return(data, x)
+plot_return(data, x, y)
 }
 \arguments{
 \item{data}{tibble with earnings}
 
-\item{x}{character string with column name to plot returns for}
+\item{x}{character string with column name to plot on x axis}
+
+\item{y}{character string with column name to plot on y axis}
 }
 \description{
 Plot return

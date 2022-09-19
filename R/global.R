@@ -3,7 +3,7 @@
 max_stake <- 500
 
 ## Grouping the odds by these breakpoints
-breaks_odds <- c(1, 1.25, 1.50, 1.75, 2, 2.5, 3, 4, 5)
+breaks_odds <- c(1, 1.1, 1.15, 1.25, 1.50, 1.75, 2, 2.5, 3, 4, 5)
 
 ## Grouping the stake by these breakpoints
 breaks_stake <- c(0, 25, 50, 75, 100, 200) 
