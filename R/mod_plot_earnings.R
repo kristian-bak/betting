@@ -26,13 +26,24 @@ mod_plot_earnings_ui <- function(id){
       column(3, 
         shinyjs::hidden(
           selectInput(
-            inputId = ns("select_period_y_var"), 
-            label = "Select attribute", 
+            inputId = ns("select_period_y_var1"), 
+            label = "Select attribute 1", 
             choices = c("Bets", "StakeLimit", "MedianOdds", "Stake", "Accuracy", "Revenue", 
                         "Earnings", "Return", "ExpReturn"), 
             selected = "Return"
           )
         )
+      ),
+      column(3, 
+             shinyjs::hidden(
+               selectInput(
+                 inputId = ns("select_period_y_var2"), 
+                 label = "Select attribute 2", 
+                 choices = c("", "Bets", "StakeLimit", "MedianOdds", "Stake", "Accuracy", "Revenue", 
+                             "Earnings", "Return", "ExpReturn"), 
+                 selected = ""
+               )
+             )
       )
     ),
 
@@ -102,7 +113,9 @@ mod_plot_earnings_server <- function(id, data){
       plot_data_return() %>% 
         plot_return(
           x = input$select_return_x_var,
-          y = input$select_period_y_var
+          y1 = input$select_period_y_var1,
+          y2 = input$select_period_y_var2, 
+          source = "return"
         ) %>% 
         plotly::event_register(event = "plotly_click")
       
@@ -125,7 +138,8 @@ mod_plot_earnings_server <- function(id, data){
           shinyjs::show(id = "select_yaxis1")
           shinyjs::show(id = "select_yaxis2")
           shinyjs::show(id = "select_return_x_var")
-          shinyjs::show(id = "select_period_y_var")
+          shinyjs::show(id = "select_period_y_var1")
+          shinyjs::show(id = "select_period_y_var2")
         })
         
       }

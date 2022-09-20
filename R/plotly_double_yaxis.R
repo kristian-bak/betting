@@ -11,11 +11,15 @@
 #' @param yaxis1_title title on y axis 1
 #' @param yaxis2_title title on y axis 2
 #' @param main_title title on top of the plot
-#' 
-plotly_double_yaxis <- function(data, type, mode, x, yaxis1, yaxis2, legend1, legend2, xaxis_title, yaxis1_title, yaxis2_title, main_title) {
+#' @param source source passed on to plotly::plot_ly()
+plotly_double_yaxis <- function(data, type, mode, x, yaxis1, yaxis2, legend1, legend2, xaxis_title, yaxis1_title, yaxis2_title, main_title, source) {
+  
+  if (missing(source)) {
+    source <- ""
+  }
   
   fig <- plotly::plot_ly(
-    data = data, x = ~get(x), y = ~get(yaxis1), name = legend1, 
+    data = data, x = ~get(x), y = ~get(yaxis1), name = legend1, source = source,
     mode = mode, type = type, line = list(color = "#408cbc")) %>% 
     plotly::layout(title = main_title, 
                    xaxis = list(title = xaxis_title),

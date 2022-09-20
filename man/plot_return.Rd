@@ -4,14 +4,18 @@
 \alias{plot_return}
 \title{Plot return}
 \usage{
-plot_return(data, x, y)
+plot_return(data, x, y1, y2, source)
 }
 \arguments{
 \item{data}{tibble with earnings}
 
 \item{x}{character string with column name to plot on x axis}
 
-\item{y}{character string with column name to plot on y axis}
+\item{y1}{character string with column name to plot on y axis 1}
+
+\item{y2}{character string with column name to plot on y axis 2}
+
+\item{source}{source paramater passed on to plotly::plot_ly()}
 }
 \description{
 Plot return

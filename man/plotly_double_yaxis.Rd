@@ -16,7 +16,8 @@ plotly_double_yaxis(
   xaxis_title,
   yaxis1_title,
   yaxis2_title,
-  main_title
+  main_title,
+  source
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ plotly_double_yaxis(
 \item{yaxis2_title}{title on y axis 2}
 
 \item{main_title}{title on top of the plot}
+
+\item{source}{source passed on to plotly::plot_ly()}
 }
 \description{
 Plotly double y axis
