@@ -51,7 +51,7 @@ usethis::use_package("htmltools")
 usethis::use_package("curl")
 usethis::use_package("shinyWidgets")
 usethis::use_package("glue")
-usethis::use_package("data.table")
+usethis::use_package("lubridate")
 remotes::install_github("kristian-bak/kb.utils")
 
 ## Add module
