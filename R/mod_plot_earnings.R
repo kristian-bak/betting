@@ -103,7 +103,8 @@ mod_plot_earnings_server <- function(id, data){
         plot_return(
           x = input$select_return_x_var,
           y = input$select_period_y_var
-        )
+        ) %>% 
+        plotly::event_register(event = "plotly_click")
       
     })
     
@@ -113,8 +114,7 @@ mod_plot_earnings_server <- function(id, data){
         plot_earnings(
           y1 = input$select_yaxis1, 
           y2 = input$select_yaxis2
-        ) %>% 
-        plotly::event_register(event = "plotly_click")
+        )
       
     })
     
@@ -133,7 +133,7 @@ mod_plot_earnings_server <- function(id, data){
     
     plotly_return_period_clicked <- reactive({
       
-      clicks <- plotly::event_data(event = "plotly_click")
+      clicks <- plotly::event_data(event = "plotly_click", source = "return", session = session)
       
       if (!is.null(clicks)) {
         clicks %>% 

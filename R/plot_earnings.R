@@ -30,7 +30,7 @@ plot_return <- function(data, x, y) {
   
   data %>% 
     dplyr::mutate(Win = dplyr::if_else(Return >= 0, "Win", "Loss")) %>% 
-    plotly::plot_ly() %>% 
+    plotly::plot_ly(source = "return") %>% 
     plotly::add_bars(x = ~get(x), y = ~get(y), color = ~Win, colors = c("#FFC3B8", "#C3F5C3")) %>% 
     plotly::layout(showlegend = FALSE, 
                    xaxis = list(title = x), 
