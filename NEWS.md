@@ -1,3 +1,7 @@
+# Betting 2.7.0
+
+* Adding plot with earnings by week
+
 # Betting 2.6.0
 
 * Color adjustment and stressing earnings for all data
