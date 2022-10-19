@@ -1,3 +1,7 @@
+# Betting 2.8.0
+
+* Adding home vs away summary
+
 # Betting 2.7.0
 
 * Adding plot with earnings by week

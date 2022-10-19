@@ -20,7 +20,20 @@ col_prep <- function(data, breaks_odds, breaks_stake, bound_odds, bound_stake) {
                   Bookmaker  = dplyr::if_else(is.na(Bookmaker), "Danske Spil", Bookmaker), 
                   Year = substring(MatchDay, 1, 4),
                   Month = substring(MatchDay, 1, 7), 
-                  Week = paste0(Year, "-", lubridate::isoweek(MatchDay)))
+                  Week = paste0(Year, "-", add_zero(lubridate::isoweek(MatchDay))), 
+                  PredWin = dplyr::case_when(
+                    GameType == "Dobbeltchance" & grepl("Uafgjort eller", Bet) ~ "Away",
+                    GameType == "Dobbeltchance" & !grepl("Uafgjort eller", Bet) ~ "Home",
+                    GameType == "Kampvinder" & Bet == "1" ~ "Home",
+                    GameType == "Kampvinder" & Bet == "X" ~ "Draw",
+                    GameType == "Kampvinder" & Bet == "2" ~ "Away",
+                    GameType == "Kampvinder" & kb.utils::remove_everything_before(pattern = ": ", x = Bet) == HomeTeam ~ "Home",
+                    GameType == "Kampvinder" & kb.utils::remove_everything_before(pattern = ": ", x = Bet) == AwayTeam ~ "Away",
+                    TRUE ~ "Not directed bet"
+                  )
+    )
+  
+  ## get_selected_subset must be updated if adding a new column here
   
   df_count_bets <- data_tmp %>% 
     dplyr::mutate(ExposureBets = dplyr::if_else(is.na(Revenue) | is.na(Match), 0, 1)) %>% 

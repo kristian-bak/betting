@@ -64,6 +64,10 @@ mod_summary_ui <- function(id){
           title = "BetDay vs MatchDay", 
           outputId = ns("table_days"),
           p("Clarification: DaysDiff > 0 means the bet was made at least one day before the match day")
+        ),
+        show_earning_panel(
+          title = "Home vs away", 
+          outputId = ns("table_home_vs_away")
         )
       )
     )
@@ -218,6 +222,20 @@ mod_summary_server <- function(id, data){
     
     output$table_days <- DT::renderDataTable({
       DT::datatable(df_days(), selection = "single") %>% 
+        color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
+    })
+    
+    ## Home vs away
+    df_home_vs_away <- reactive({
+      
+      data() %>% 
+        calculate_earnings_grouped_by(PredWin) %>% 
+        select_stress(stress = input$switch_stress)
+      
+    })
+    
+    output$table_home_vs_away <- DT::renderDataTable({
+      DT::datatable(df_home_vs_away(), selection = "single") %>% 
         color_by(var = "Return", colors = c("tomato", "white", "lightgreen"))
     })
     
@@ -508,6 +526,37 @@ mod_summary_server <- function(id, data){
       showModal(
         ui = modalDialog(
           DT::dataTableOutput(outputId = ns("table_days_subset")), 
+          size = "l", 
+          easyClose = TRUE
+        ), 
+        session = session
+      )
+      
+    })
+    
+    ## Show subset for Days - end
+    
+    ## Show subset for Home vs Away - start
+    react_home_vs_away <- reactive({
+      
+      df_home_vs_away() %>% 
+        slice_and_pull(i = input$table_home_vs_away_rows_selected, j = PredWin)
+      
+    })
+    
+    output$table_home_vs_away_subset <- DT::renderDataTable({
+
+      print(react_home_vs_away())
+      
+      DT::datatable(get_selected_subset(data = data(), PredWin == react_home_vs_away()))
+      
+    })
+    
+    observeEvent(input$table_home_vs_away_rows_selected, {
+      
+      showModal(
+        ui = modalDialog(
+          DT::dataTableOutput(outputId = ns("table_home_vs_away_subset")), 
           size = "l", 
           easyClose = TRUE
         ), 

@@ -102,10 +102,21 @@ mod_plot_earnings_server <- function(id, data){
     })
     
     plot_data_return <- reactive({
+      
       data() %>% 
         dplyr::group_by(dplyr::across(input$select_return_x_var)) %>% 
         calculate_earnings() %>% 
         select_stress(stress = FALSE)
+      
+      #if (input$select_return_x_var == "Week") {
+#
+      #  df <- df %>% 
+      #    add_zero_betting_weeks() %>% 
+      #    dplyr::arrange(Week)
+      #}
+      #
+      #return(df)
+      
     })
     
     output$plot_return <- plotly::renderPlotly({
